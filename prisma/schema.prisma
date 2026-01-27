@@ -1,0 +1,25 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Psychologist {
+  psychologistId Int     @id @default(autoincrement())
+  name           String  @db.VarChar(255)
+  lastname       String  @db.VarChar(255)
+  age            Int
+  specialty      String
+  phoneNumber    String
+  address        String?
+  dni            String  @db.VarChar(8)
+  email          String  @db.VarChar(75)
+  experience     String  @db.VarChar(255)
+  photo          String  @db.VarChar(255)
+  isActive       Boolean @default(true)
+
+  @@map("psychologists")
+}
