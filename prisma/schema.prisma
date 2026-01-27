@@ -1,25 +1,101 @@
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
-model Psychologist {
-  psychologistId Int     @id @default(autoincrement())
-  name           String  @db.VarChar(255)
-  lastname       String  @db.VarChar(255)
-  age            Int
-  specialty      String
-  phoneNumber    String
-  address        String?
-  dni            String  @db.VarChar(8)
-  email          String  @db.VarChar(75)
-  experience     String  @db.VarChar(255)
-  photo          String  @db.VarChar(255)
-  isActive       Boolean @default(true)
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:123456789@localhost:3306/db_patient_management"
+}
 
-  @@map("psychologists")
+model availability {
+  availability_id Int       @id @default(autoincrement())
+  psychologist_id Int
+  date            DateTime? @db.Date
+  time_range      String    @db.VarChar(20)
+  is_active       Boolean?  @default(true)
+}
+
+model booking {
+  booking_id      Int      @id @default(autoincrement())
+  patient_id      Int
+  psychologist_id Int
+  service_id      Int
+  booking_date    DateTime @db.DateTime(0)
+  time_range      String   @db.VarChar(20)
+  state           String?  @db.VarChar(255)
+  notes           String?  @db.Text
+  payment_id      String?  @db.VarChar(255)
+}
+
+model patient {
+  patient_id        Int     @id @default(autoincrement())
+  name              String  @db.VarChar(255)
+  lastname          String  @db.VarChar(255)
+  age               Int?
+  dni               String? @db.VarChar(255)
+  phone_number      String? @db.VarChar(255)
+  tutor_name        String? @db.VarChar(255)
+  admission_date    String? @db.VarChar(255)
+  observations      String? @db.VarChar(255)
+  last_session_date String? @db.VarChar(255)
+  signed_consent    Bytes?
+}
+
+model payment {
+  id             Int       @id @default(autoincrement())
+  payment_id     String    @db.VarChar(255)
+  booking_id     Int
+  amount         Float
+  currency       String    @db.VarChar(255)
+  transaction_id String    @db.VarChar(255)
+  status         String?   @db.VarChar(255)
+  created_at     DateTime  @default(now()) @db.DateTime(0)
+  updated_at     DateTime? @db.DateTime(0)
+
+  @@index([transaction_id], map: "payment_transaction_id")
+}
+
+model psychologist {
+  psychologist_id Int     @id @default(autoincrement())
+  name            String  @db.VarChar(255)
+  lastname        String  @db.VarChar(255)
+  age             Int
+  specialty       String  @db.VarChar(255)
+  experience      String  @db.VarChar(255)
+  is_active       Boolean @default(true)
+  address         String? @db.VarChar(255)
+  email           String? @db.VarChar(75)
+  dni             String? @db.VarChar(8)
+  phone_number    String? @db.VarChar(255)
+  photo           String? @db.VarChar(255)
+}
+
+model service {
+  service_id  Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  description String   @db.Text
+  is_active   Boolean? @default(true)
+  price       Float
+  image       String   @db.TinyText
+}
+
+model session {
+  session_id   Int       @id @default(autoincrement())
+  title        String    @db.VarChar(255)
+  description  String    @db.VarChar(255)
+  booking_id   Int
+  patient_id   Int
+  session_date DateTime? @db.DateTime(6)
+}
+
+model user {
+  user_id         Int      @id @default(autoincrement())
+  username        String   @unique(map: "username") @db.VarChar(255)
+  password        String   @db.VarChar(255)
+  profile         String?  @db.VarChar(50)
+  name            String?  @db.VarChar(70)
+  lastname        String?  @db.VarChar(70)
+  patient_id      Int?
+  psychologist_id Int?
+  is_active       Boolean? @default(true)
 }

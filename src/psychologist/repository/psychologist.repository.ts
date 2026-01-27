@@ -8,19 +8,19 @@ export class PsychologistRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(psychologist: Psychologist): Promise<Psychologist> {
-    const created = await this.prisma.getPsychologist().create({
+    const created = await this.prisma.psychologist.create({
       data: {
         name: psychologist.name,
         lastname: psychologist.lastname,
         age: psychologist.age,
         specialty: psychologist.specialty,
-        phoneNumber: psychologist.phoneNumber,
+        phone_number: psychologist.phoneNumber,
         address: psychologist.address,
         dni: psychologist.dni,
         email: psychologist.email,
         experience: psychologist.experience,
         photo: psychologist.photo,
-        isActive: psychologist.isActive,
+        is_active: psychologist.isActive,
       },
     });
 
@@ -29,7 +29,7 @@ export class PsychologistRepository {
 
   async findById(id: number): Promise<Psychologist> {
     const found = await this.prisma.psychologist.findUnique({
-      where: { psychologistId: id },
+      where: { psychologist_id: id },
     });
     return RepositoryMapper.toDomain(found);
   }
@@ -41,19 +41,19 @@ export class PsychologistRepository {
 
   async update(psychologist: Psychologist): Promise<Psychologist> {
     const updated = await this.prisma.psychologist.update({
-      where: { psychologistId: psychologist.psychologistId },
+      where: { psychologist_id: psychologist.psychologistId },
       data: {
         name: psychologist.name,
         lastname: psychologist.lastname,
         age: psychologist.age,
         specialty: psychologist.specialty,
-        phoneNumber: psychologist.phoneNumber,
+        phone_number: psychologist.phoneNumber,
         address: psychologist.address,
         dni: psychologist.dni,
         email: psychologist.email,
         experience: psychologist.experience,
         photo: psychologist.photo,
-        isActive: psychologist.isActive,
+        is_active: psychologist.isActive,
       },
     });
 
@@ -62,7 +62,7 @@ export class PsychologistRepository {
 
   async delete(id: number): Promise<void> {
     await this.prisma.psychologist.delete({
-      where: { psychologistId: id },
+      where: { psychologist_id: id },
     });
   }
 }
