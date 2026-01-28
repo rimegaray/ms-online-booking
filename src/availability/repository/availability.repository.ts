@@ -9,7 +9,7 @@ export class AvailabilityRepository {
 
   async findByPsychologistId(psychologistId: number): Promise<Availability[]> {
     const availabilityEntities = await this.prisma.availability.findMany({
-      where: { psychologistId },
+      where: { psychologist_id: psychologistId },
     });
     return availabilityEntities.map(AvailabilityRepositoryMapper.toDomain);
   }
@@ -19,8 +19,8 @@ export class AvailabilityRepository {
   ): Promise<Availability[]> {
     const availabilityEntities = await this.prisma.availability.findMany({
       where: {
-        psychologistId,
-        isActive: false,
+        psychologist_id: psychologistId,
+        is_active: false,
       },
     });
     return availabilityEntities.map(AvailabilityRepositoryMapper.toDomain);
@@ -37,7 +37,7 @@ export class AvailabilityRepository {
   async update(availability: Availability): Promise<Availability> {
     const entity = AvailabilityRepositoryMapper.toEntity(availability);
     const updatedEntity = await this.prisma.availability.update({
-      where: { availabilityId: availability.availabilityId },
+      where: { availability_id: availability.availabilityId },
       data: entity,
     });
     return AvailabilityRepositoryMapper.toDomain(updatedEntity);

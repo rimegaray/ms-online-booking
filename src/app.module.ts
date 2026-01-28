@@ -1,37 +1,19 @@
 import { Module } from '@nestjs/common';
-import { PsychologistController } from './psychologist/controller/psychologist.controller';
-import { PsychologistService } from './psychologist/service/psychologist.service';
-import { PsychologistRepository } from './psychologist/repository/psychologist.repository';
 import { PrismaService } from './common/service/prisma.service';
-import { PatientRepository } from './patient/repository/patient.repository';
-import { PatientService } from './patient/service/patient.service';
-import { PatientController } from './patient/controller/patient.controller';
-import { UserService } from './user/service/user.service';
-import { UserRepository } from './user/repository/user.repository';
-import { UserController } from './user/controller/user.controller';
-import { SessionController } from './session/controller/session.controller';
-import { SessionService } from './session/service/session.service';
-import { SessionRepository } from './session/repository/session.repository';
+import { PsychologistModule } from './psychologist/psychologist.module';
+import { PatientModule } from './patient/patient.module';
+import { UserModule } from './user/user.module';
+import { SessionModule } from './session/session.module';
 import { AvailabilityModule } from './availability/availability.module';
 
 @Module({
-  imports: [AvailabilityModule],
-  controllers: [
-    PsychologistController,
-    PatientController,
-    UserController,
-    SessionController,
+  imports: [
+    PsychologistModule,
+    PatientModule,
+    UserModule,
+    SessionModule,
+    AvailabilityModule,
   ],
-  providers: [
-    PsychologistService,
-    PsychologistRepository,
-    PatientService,
-    PatientRepository,
-    UserService,
-    UserRepository,
-    SessionService,
-    SessionRepository,
-    PrismaService,
-  ],
+  providers: [PrismaService],
 })
 export class AppModule {}
