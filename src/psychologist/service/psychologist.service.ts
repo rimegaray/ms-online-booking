@@ -4,17 +4,16 @@ import { PsychologistRepository } from '../repository/psychologist.repository';
 
 @Injectable()
 export class PsychologistService {
-
   constructor(
     private readonly psychologistRepository: PsychologistRepository,
-  ) { }
+  ) {}
 
   getPsychologists(): Promise<Psychologist[]> {
     return this.psychologistRepository.findAll();
   }
 
   getPsychologistsById(psychologistId: number): Promise<Psychologist> {
-    return this.psychologistRepository.findById(psychologistId)
+    return this.psychologistRepository.findById(psychologistId);
   }
 
   createPsychologist(psychologist: Psychologist): Promise<Psychologist> {
@@ -25,7 +24,7 @@ export class PsychologistService {
     return this.psychologistRepository.update(psychologist);
   }
 
-  detelePsychologist(psychologistId: number) :Promise<void>{
+  detelePsychologist(psychologistId: number): Promise<void> {
     return this.psychologistRepository.delete(psychologistId);
   }
 }

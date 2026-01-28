@@ -1,15 +1,15 @@
-export class UserRequestDto{
-	username: string;
-	
-	password: string;
-	
-	profile: string;
+export class UserRequestDto {
+  username: string;
 
-    psychologistId: number;
+  password: string;
 
-	name: string;
+  profile: string;
 
-	lastname: string;
-    patientId: number;
-    isActive: boolean;
+  psychologistId: number;
+
+  name: string;
+
+  lastname: string;
+  patientId: number;
+  isActive: boolean;
 }

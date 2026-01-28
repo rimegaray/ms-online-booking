@@ -36,7 +36,7 @@ export class PsychologistRepository {
 
   async findAll(): Promise<Psychologist[]> {
     const list = await this.prisma.psychologist.findMany();
-    return list.map(psychologist => RepositoryMapper.toDomain(psychologist));
+    return list.map((psychologist) => RepositoryMapper.toDomain(psychologist));
   }
 
   async update(psychologist: Psychologist): Promise<Psychologist> {

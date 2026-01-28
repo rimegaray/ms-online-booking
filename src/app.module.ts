@@ -9,13 +9,28 @@ import { PatientController } from './patient/controller/patient.controller';
 import { UserService } from './user/service/user.service';
 import { UserRepository } from './user/repository/user.repository';
 import { UserController } from './user/controller/user.controller';
+import { SessionController } from './session/controller/session.controller';
+import { SessionService } from './session/service/session.service';
+import { SessionRepository } from './session/repository/session.repository';
 
 @Module({
   imports: [],
-  controllers: [PsychologistController, PatientController, UserController],
-  providers: [PsychologistService, PsychologistRepository, 
-    PatientService, PatientRepository,
-    UserService, UserRepository,
-    PrismaService],
+  controllers: [
+    PsychologistController,
+    PatientController,
+    UserController,
+    SessionController,
+  ],
+  providers: [
+    PsychologistService,
+    PsychologistRepository,
+    PatientService,
+    PatientRepository,
+    UserService,
+    UserRepository,
+    SessionService,
+    SessionRepository,
+    PrismaService,
+  ],
 })
 export class AppModule {}
