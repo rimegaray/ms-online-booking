@@ -3,7 +3,7 @@ import { BookingService } from '../service/booking.service';
 import { BookingRequestDto } from './dto/booking-request.dto';
 import { BookingResponseDto } from './dto/booking-response.dto';
 import { BookingMapper } from './mapper/booking.mapper';
-import { IsNumber, IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import { IsNumber, IsNotEmpty, IsString } from 'class-validator';
 
 class ProcessingRequestDto {
   @IsNumber()
@@ -59,5 +59,17 @@ export class BookingController {
       processingRequestDto.transactionId,
     );
     return BookingMapper.toResponse(booking);
+  }
+
+  @Post(':bookingId/confirmation')
+  async bookingConfirmation(@Param('bookingId') bookingId: string): Promise<BookingResponseDto> {
+    const bookingConfirm = await this.bookingService.confirm(Number(bookingId));
+    return BookingMapper.toResponse(bookingConfirm);
+  }
+
+  @Post(':bookingId/rejection')
+  async bookingRejected(@Param('bookingId') bookingId: string): Promise<BookingResponseDto> {
+    const bookingReject = await this.bookingService.rejected(Number(bookingId));
+    return BookingMapper.toResponse(bookingReject);
   }
 }

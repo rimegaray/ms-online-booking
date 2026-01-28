@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Booking, Payment } from '../model/booking.model';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Booking, BookingState, Payment, PaymentStatus } from '../model/booking.model';
 import { BookingRepository } from '../repository/booking.repository';
 import { randomUUID } from 'crypto';
 
@@ -33,7 +33,7 @@ export class BookingService {
       amount,
       currency: 'PEN',
       transactionId,
-      status: 'PENDING',
+      status: PaymentStatus.PENDING,
     };
 
     const createdPayment = await this.bookingRepository.createPayment(payment);
@@ -41,7 +41,7 @@ export class BookingService {
     const updatedBooking =
       await this.bookingRepository.updateBookingToProcessing(
         bookingId,
-        'PROCESSING',
+        BookingState.PROCESSING,
         createdPayment.paymentId,
       );
 
@@ -49,5 +49,42 @@ export class BookingService {
       ...updatedBooking,
       paymentId: createdPayment.paymentId,
     };
+  }
+
+  async confirm(bookingId: number): Promise<Booking> {
+
+    const booking = await this.bookingRepository.updateStateBooking(
+      bookingId,
+      BookingState.CONFIRMED,
+    )
+
+    if(!booking.paymentId){
+      throw new BadRequestException('El booking no tiene un payment asociado.')
+    }
+
+    await this.bookingRepository.updateStatusPayment(
+      booking.paymentId,
+      PaymentStatus.CONFIRMED
+    )
+
+    return booking;
+  }
+
+  async rejected(bookingId: number): Promise<Booking> {
+    const booking = await this.bookingRepository.updateStateBooking(
+      bookingId,
+      BookingState.REJECTED
+    )
+
+    if(!booking.paymentId){
+      throw new BadRequestException('El booking no tiene un payment asociado.')
+    }
+
+    await this.bookingRepository.updateStatusPayment(
+      booking.paymentId,
+      PaymentStatus.REJECTED
+    )
+
+    return booking;
   }
 }

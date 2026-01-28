@@ -47,3 +47,16 @@ export interface Payment {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export enum BookingState {
+  PENDING_PAYMENT = 'PENDING_PAYMENT',
+  PROCESSING = 'PROCESSING',
+  CONFIRMED = 'CONFIRMED',
+  REJECTED = 'REJECTED' 
+}
+
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  REJECTED = 'REJECTED' 
+}
