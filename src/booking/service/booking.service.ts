@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Booking, Payment } from '../model/booking.model';
 import { BookingRepository } from '../repository/booking.repository';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class BookingService {
@@ -23,10 +24,11 @@ export class BookingService {
     amount: number,
     transactionId: string,
   ): Promise<Booking> {
-    const paymentId = `PAY-${bookingId}-${Date.now()}`;
+    const paymentUuid = `PAY-${randomUUID()}`;
 
     const payment: Payment = {
-      paymentId,
+      paymentId : 0,
+      paymentUuid,
       bookingId,
       amount,
       currency: 'PEN',

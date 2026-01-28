@@ -24,7 +24,12 @@ model booking {
   time_range      String   @db.VarChar(20)
   state           String?  @db.VarChar(255)
   notes           String?  @db.Text
-  payment_id      String?  @db.VarChar(255)
+  payment_id      Int?     @unique
+
+  patient      patient      @relation(fields: [patient_id], references: [patient_id])
+  psychologist psychologist @relation(fields: [psychologist_id], references: [psychologist_id])
+  service      service      @relation(fields: [service_id], references: [service_id])
+  payment      payment?     @relation(fields: [payment_id], references: [payment_id])
 }
 
 model patient {
@@ -39,11 +44,13 @@ model patient {
   observations      String? @db.VarChar(255)
   last_session_date String? @db.VarChar(255)
   signed_consent    Bytes?
+
+  bookings booking[]
 }
 
 model payment {
-  id             Int       @id @default(autoincrement())
-  payment_id     String    @db.VarChar(255)
+  payment_id     Int       @id @default(autoincrement())
+  payment_uuid   String    @db.VarChar(255)
   booking_id     Int
   amount         Float
   currency       String    @db.VarChar(255)
@@ -51,6 +58,8 @@ model payment {
   status         String?   @db.VarChar(255)
   created_at     DateTime  @default(now()) @db.DateTime(0)
   updated_at     DateTime? @db.DateTime(0)
+
+  bookings booking?
 
   @@index([transaction_id], map: "payment_transaction_id")
 }
@@ -68,6 +77,8 @@ model psychologist {
   dni             String? @db.VarChar(8)
   phone_number    String? @db.VarChar(255)
   photo           String? @db.VarChar(255)
+
+  bookings booking[]
 }
 
 model service {
@@ -77,6 +88,8 @@ model service {
   is_active   Boolean? @default(true)
   price       Float
   image       String   @db.TinyText
+
+  bookings booking[]
 }
 
 model session {

@@ -5,7 +5,7 @@ import { Psychologist } from 'src/psychologist/model/psychologist.model';
 export class RepositoryMapper {
   static toDomain(prismaPsychologist: any): Psychologist {
     return {
-      psychologistId: prismaPsychologist.psychologistId,
+      psychologistId: prismaPsychologist.psychologist_id,
       name: prismaPsychologist.name,
       lastname: prismaPsychologist.lastname,
       age: prismaPsychologist.age,

@@ -5,12 +5,12 @@ import { Session } from 'src/session/model/session.model';
 export class RepositoryMapper {
   static toDomain(prismaSession: any): Session {
     return {
-      sessionId: prismaSession.sessionId,
+      sessionId: prismaSession.session_id,
       title: prismaSession.title,
       description: prismaSession.description,
-      bookingId: prismaSession.bookingId,
-      patientId: prismaSession.patientId,
-      sessionDate: prismaSession.sessionDate ?? undefined,
+      bookingId: prismaSession.booking_id,
+      patientId: prismaSession.patient_id,
+      sessionDate: prismaSession.session_date ?? undefined,
     };
   }
 }

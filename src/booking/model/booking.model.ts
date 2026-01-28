@@ -7,7 +7,8 @@ export interface Booking {
   timeRange: string;
   state?: string;
   notes?: string;
-  paymentId?: string;
+  paymentId?: number;
+  payment?: Payment;
   patient?: PatientInfo;
   psychologist?: PsychologistInfo;
   service?: ServiceInfo;
@@ -36,8 +37,8 @@ export interface ServiceInfo {
 }
 
 export interface Payment {
-  id?: number;
-  paymentId: string;
+  paymentId: number;
+  paymentUuid: string;
   bookingId: number;
   amount: number;
   currency: string;

@@ -64,7 +64,7 @@ export class BookingRepository {
   async updateBookingToProcessing(
     bookingId: number,
     state: string,
-    paymentId: string,
+    paymentId: number,
   ): Promise<Booking> {
     const updated = await this.prisma.booking.update({
       where: { booking_id: bookingId },
@@ -76,7 +76,7 @@ export class BookingRepository {
   async createPayment(payment: Payment): Promise<Payment> {
     const created = await this.prisma.payment.create({
       data: {
-        payment_id: payment.paymentId,
+        payment_uuid: payment.paymentUuid,
         booking_id: payment.bookingId,
         amount: payment.amount,
         currency: payment.currency,
