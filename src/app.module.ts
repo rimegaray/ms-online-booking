@@ -5,6 +5,7 @@ import { PatientModule } from './patient/patient.module';
 import { UserModule } from './user/user.module';
 import { SessionModule } from './session/session.module';
 import { AvailabilityModule } from './availability/availability.module';
+import { BookingModule } from './booking/booking.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AvailabilityModule } from './availability/availability.module';
     UserModule,
     SessionModule,
     AvailabilityModule,
+    BookingModule,
   ],
   providers: [PrismaService],
 })
