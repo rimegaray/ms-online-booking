@@ -12,9 +12,10 @@ import { UserController } from './user/controller/user.controller';
 import { SessionController } from './session/controller/session.controller';
 import { SessionService } from './session/service/session.service';
 import { SessionRepository } from './session/repository/session.repository';
+import { AvailabilityModule } from './availability/availability.module';
 
 @Module({
-  imports: [],
+  imports: [AvailabilityModule],
   controllers: [
     PsychologistController,
     PatientController,
