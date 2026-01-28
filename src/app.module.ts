@@ -7,6 +7,7 @@ import { SessionModule } from './session/session.module';
 import { AvailabilityModule } from './availability/availability.module';
 import { BookingModule } from './booking/booking.module';
 import { ServiceModule } from './service/service.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ServiceModule } from './service/service.module';
     AvailabilityModule,
     BookingModule,
     ServiceModule,
+    AuthModule,
   ],
   providers: [PrismaService],
 })

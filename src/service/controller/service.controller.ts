@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { ServiceService } from "../service/service.service";
 import { ServiceRequestDto } from "./dto/service-request.dto";
 import { ServiceResponseDto } from "./dto/service-response.dto";
 import { ServiceMapper } from "./mapper/service.mapper";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller('/service')
 export class ServiceController {
@@ -16,6 +17,7 @@ export class ServiceController {
         return ServiceMapper.toResponse(service);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Get()
     getAll(): Promise<ServiceResponseDto[]> {
         return this.serviceService.findService();
