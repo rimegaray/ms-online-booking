@@ -12,6 +12,7 @@ export class ServiceMapper {
             description: dto.description,
             price: dto.price,
             image: dto.image,
+            isActive: dto.isActive,
         }
     }
 

@@ -18,4 +18,12 @@ export class ServiceService {
     findServiceById(serviceId: number): Promise<Service> {
         return this.serviceRepository.findById(serviceId);
     }
+
+    updateService(service: Service): Promise<Service> {
+        return this.serviceRepository.update(service);
+    }
+
+    deleteService(serviceId: number): Promise<void> {
+        return this.serviceRepository.delete(serviceId);
+    }
 }

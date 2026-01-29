@@ -33,4 +33,26 @@ export class ServiceRepository {
         })
         return RepositoryMapper.toDomain(service);
     }
+
+    async update(service: Service): Promise<Service> {
+        const updated = await this.prismaService.service.update({
+            where: { service_id: service.serviceId },
+            data:{
+                name: service.name,
+                description: service.description,
+                is_active: service.isActive,
+                price: service.price,
+                image: service.image
+            }
+        });
+
+        return RepositoryMapper.toDomain(updated);
+    }
+
+    async delete(serviceId: number): Promise<void> {
+        console.log('ServiceId en el repository:  ', serviceId);
+        await this.prismaService.service.delete({
+            where: { service_id: serviceId }
+        });
+    }
 }
