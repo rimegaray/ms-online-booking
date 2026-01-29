@@ -29,7 +29,7 @@ export class BookingResponseDto {
   timeRange: string;
   state: string;
   notes?: string;
-  paymentId?: string;
+  paymentId?: number;
   patient?: PatientInfoDto;
   psychologist?: PsychologistInfoDto;
   service?: ServiceInfoDto;

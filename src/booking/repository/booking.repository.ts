@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/service/prisma.service';
-import { Booking, Payment } from '../model/booking.model';
+import { Booking, BookingState, Payment, PaymentStatus } from '../model/booking.model';
 import { RepositoryMapper } from './mapper/repository.mapper';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class BookingRepository {
         service_id: booking.serviceId,
         booking_date: booking.bookingDate,
         time_range: booking.timeRange,
-        state: 'PENDING_PAYMENT',
+        state: BookingState.PENDING_PAYMENT,
         notes: booking.notes,
       },
     });
@@ -64,7 +64,7 @@ export class BookingRepository {
   async updateBookingToProcessing(
     bookingId: number,
     state: string,
-    paymentId: string,
+    paymentId: number,
   ): Promise<Booking> {
     const updated = await this.prisma.booking.update({
       where: { booking_id: bookingId },
@@ -76,15 +76,36 @@ export class BookingRepository {
   async createPayment(payment: Payment): Promise<Payment> {
     const created = await this.prisma.payment.create({
       data: {
-        payment_id: payment.paymentId,
+        payment_uuid: payment.paymentUuid,
         booking_id: payment.bookingId,
         amount: payment.amount,
         currency: payment.currency,
         transaction_id: payment.transactionId,
-        status: payment.status ?? 'PENDING',
+        status: payment.status ?? PaymentStatus.PENDING,
       },
     });
 
     return RepositoryMapper.toPaymentDomain(created);
+  }
+
+  async updateStateBooking(bookingId: number, state: BookingState): Promise<Booking>{
+    const stateUpdate = await this.prisma.booking.update({
+      where: { booking_id: bookingId},
+      data: { state }
+    })
+
+    return RepositoryMapper.toDomain(stateUpdate);
+  }
+
+  async updateStatusPayment(paymentId: number, status: PaymentStatus): Promise<Payment> {
+    const statusUpdate = await this.prisma.payment.update({
+      where: { payment_id: paymentId },
+      data: {
+        status,
+        updated_at: new Date(),
+      }
+    })
+
+    return RepositoryMapper.toPaymentDomain(statusUpdate);
   }
 }

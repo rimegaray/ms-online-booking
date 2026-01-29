@@ -7,7 +7,8 @@ export interface Booking {
   timeRange: string;
   state?: string;
   notes?: string;
-  paymentId?: string;
+  paymentId?: number;
+  payment?: Payment;
   patient?: PatientInfo;
   psychologist?: PsychologistInfo;
   service?: ServiceInfo;
@@ -36,8 +37,8 @@ export interface ServiceInfo {
 }
 
 export interface Payment {
-  id?: number;
-  paymentId: string;
+  paymentId: number;
+  paymentUuid: string;
   bookingId: number;
   amount: number;
   currency: string;
@@ -45,4 +46,17 @@ export interface Payment {
   status?: string;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export enum BookingState {
+  PENDING_PAYMENT = 'PENDING_PAYMENT',
+  PROCESSING = 'PROCESSING',
+  CONFIRMED = 'CONFIRMED',
+  REJECTED = 'REJECTED' 
+}
+
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  REJECTED = 'REJECTED' 
 }

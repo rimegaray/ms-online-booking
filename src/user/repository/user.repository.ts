@@ -55,4 +55,10 @@ export class UserRepository {
 
     return RepositoryMapper.toDomain(updated);
   }
+
+  async delete(userId: number): Promise<void> {
+    await this.prisma.user.delete({
+      where: { user_id: userId }
+    })
+  }
 }
