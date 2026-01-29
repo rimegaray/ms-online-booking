@@ -18,12 +18,13 @@ export class ServiceController {
         return ServiceMapper.toResponse(service);
     }
 
+    @UseGuards(AuthGuard)
     @Get()
     getAll(): Promise<ServiceResponseDto[]> {
         return this.serviceService.findService();
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard)
     @Get(':serviceId')
     getById(@Param('serviceId') serviceId: string): Promise<ServiceResponseDto> {
         return this.serviceService.findServiceById(Number(serviceId));
