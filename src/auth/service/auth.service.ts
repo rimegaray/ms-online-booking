@@ -3,6 +3,7 @@ import { AuthRepository } from "../repository/auth.repository";
 import { Auth } from "../model/auth.model";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
+import { User } from "src/user/model/user.model";
 
 @Injectable()
 export class AuthService {
@@ -16,14 +17,16 @@ export class AuthService {
         const user = await this.authRepository.findByUsername(auth.username);
 
         if(!user){
-            throw new UnauthorizedException('Credenciales inválidas')
+            throw new UnauthorizedException('Usuario inválido')
         }
 
         const passwordValid = await bcrypt.compare(auth.password, user.password); 
 
         if(!passwordValid){
-            throw new UnauthorizedException('Credenciales inválidas')
+            throw new UnauthorizedException('Contraseña inválida')
         }
+
+        this.validateActive(user.is_active);
         
         const payload = {
             sub: user.user_id,
@@ -37,5 +40,11 @@ export class AuthService {
             profile: user.profile,
             accsessToken: this.jwtService.sign(payload),
         };
+    }
+
+    validateActive(isActive: boolean) {
+        if(!isActive){
+            throw new UnauthorizedException('Usuario inactivo');
+        }
     }
 }

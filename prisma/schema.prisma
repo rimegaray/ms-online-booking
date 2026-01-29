@@ -110,5 +110,5 @@ model user {
   lastname        String?  @db.VarChar(70)
   patient_id      Int?
   psychologist_id Int?
-  is_active       Boolean? @default(true)
+  is_active       Boolean @default(true)
 }
