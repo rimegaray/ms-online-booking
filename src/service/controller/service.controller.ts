@@ -5,7 +5,7 @@ import { ServiceResponseDto } from "./dto/service-response.dto";
 import { ServiceMapper } from "./mapper/service.mapper";
 import { AuthGuard } from "@nestjs/passport";
 
-@UseGuards(AuthGuard('jwt'))
+
 @Controller('/service')
 export class ServiceController {
 
@@ -23,6 +23,7 @@ export class ServiceController {
         return this.serviceService.findService();
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Get(':serviceId')
     getById(@Param('serviceId') serviceId: string): Promise<ServiceResponseDto> {
         return this.serviceService.findServiceById(Number(serviceId));
