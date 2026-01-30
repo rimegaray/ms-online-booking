@@ -3,7 +3,6 @@ import { AuthRepository } from '../repository/auth.repository';
 import { Auth } from '../model/auth.model';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/user/model/user.model';
 import { Request, Response } from 'express';
 import { randomBytes } from 'crypto';
 
@@ -38,7 +37,7 @@ export class AuthService {
         profile: user.profile,
       },
       payload: {
-        sub: user.user_id,
+        userId: user.user_id,
         username: user.username,
         role: user.profile,
       },

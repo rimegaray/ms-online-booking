@@ -1,7 +1,18 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { Booking, BookingState, Payment, PaymentStatus } from '../model/booking.model';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
+import {
+  Booking,
+  BookingState,
+  Payment,
+  PaymentStatus,
+} from '../model/booking.model';
 import { BookingRepository } from '../repository/booking.repository';
 import { randomUUID } from 'crypto';
+import { AuthUser } from 'src/auth/jwt/jwt.guard';
+import { Role } from 'src/auth/roles/role.model';
 
 @Injectable()
 export class BookingService {
@@ -15,8 +26,46 @@ export class BookingService {
     return this.bookingRepository.findById(bookingId);
   }
 
-  getBookings(patientId?: number, psychologistId?: number): Promise<Booking[]> {
-    return this.bookingRepository.findAll(patientId, psychologistId);
+  getBookings(
+    user: AuthUser,
+    patientId?: number,
+    psychologistId?: number,
+  ): Promise<Booking[]> {
+    const filters = this.buildFiltersByRole(user, patientId, psychologistId);
+
+    return this.bookingRepository.findAll(
+      filters.patientId,
+      filters.psychologistId,
+    );
+  }
+
+  private buildFiltersByRole(
+    user: AuthUser,
+    patientId?: number,
+    psychologistId?: number,
+  ) {
+    switch (user.role) {
+      case Role.PATIENT:
+        return {
+          patientId: user.userId,
+          psychologistId: undefined,
+        };
+
+      case Role.PSYCHOLOGIST:
+        return {
+          patientId: patientId ? Number(patientId) : undefined,
+          psychologistId: user.userId,
+        };
+
+      case Role.SECRETARY:
+        return {
+          patientId: patientId ? Number(patientId) : undefined,
+          psychologistId: psychologistId ? Number(psychologistId) : undefined,
+        };
+
+      default:
+        throw new ForbiddenException();
+    }
   }
 
   async startProcessing(
@@ -27,7 +76,7 @@ export class BookingService {
     const paymentUuid = `PAY-${randomUUID()}`;
 
     const payment: Payment = {
-      paymentId : 0,
+      paymentId: 0,
       paymentUuid,
       bookingId,
       amount,
@@ -52,20 +101,19 @@ export class BookingService {
   }
 
   async confirm(bookingId: number): Promise<Booking> {
-
     const booking = await this.bookingRepository.updateStateBooking(
       bookingId,
       BookingState.CONFIRMED,
-    )
+    );
 
-    if(!booking.paymentId){
-      throw new BadRequestException('El booking no tiene un payment asociado.')
+    if (!booking.paymentId) {
+      throw new BadRequestException('El booking no tiene un payment asociado.');
     }
 
     await this.bookingRepository.updateStatusPayment(
       booking.paymentId,
-      PaymentStatus.CONFIRMED
-    )
+      PaymentStatus.CONFIRMED,
+    );
 
     return booking;
   }
@@ -73,17 +121,17 @@ export class BookingService {
   async rejected(bookingId: number): Promise<Booking> {
     const booking = await this.bookingRepository.updateStateBooking(
       bookingId,
-      BookingState.REJECTED
-    )
+      BookingState.REJECTED,
+    );
 
-    if(!booking.paymentId){
-      throw new BadRequestException('El booking no tiene un payment asociado.')
+    if (!booking.paymentId) {
+      throw new BadRequestException('El booking no tiene un payment asociado.');
     }
 
     await this.bookingRepository.updateStatusPayment(
       booking.paymentId,
-      PaymentStatus.REJECTED
-    )
+      PaymentStatus.REJECTED,
+    );
 
     return booking;
   }

@@ -4,7 +4,6 @@ import { AuthRepository } from "./repository/auth.repository";
 import { PrismaService } from "src/common/service/prisma.service";
 import { AuthController } from "./controller/auth.controller";
 import { JwtModule } from "@nestjs/jwt";
-import { JwtStrategy } from "./jwt/jwt.strategy";
 import { JwtAuthGuard } from "./jwt/jwt.guard";
 
 @Module({

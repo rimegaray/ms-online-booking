@@ -14,17 +14,18 @@ import { PatientMapper } from './mapper/patient.mapper';
 import { PatientRequestDto } from './dto/patient-request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
-@UseGuards(JwtAuthGuard)
 @Controller('/patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getPatients(): Promise<PatientResponseDto[]> {
     const patients = await this.patientService.getPatients();
     return patients.map(PatientMapper.toResponse);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':patientId')
   async getPatientById(
     @Param('patientId') patientId: String,
@@ -38,10 +39,12 @@ export class PatientController {
     @Body() patientRequestDto: PatientRequestDto,
   ): Promise<PatientRequestDto> {
     const model = PatientMapper.toModel(patientRequestDto);
+    
     const patient = await this.patientService.createPatient(model);
     return PatientMapper.toResponse(patient);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':patientId')
   async updatePatient(
     @Param('patientId') patientId: string,
@@ -56,6 +59,7 @@ export class PatientController {
     return PatientMapper.toResponse(patient);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':patientId')
   deletePatient(@Param('patientId') patientId: string): Promise<void> {
     return this.patientService.deletePatient(Number(patientId));

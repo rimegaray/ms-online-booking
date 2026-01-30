@@ -5,6 +5,9 @@ import { BookingResponseDto } from './dto/booking-response.dto';
 import { BookingMapper } from './mapper/booking.mapper';
 import { IsNumber, IsNotEmpty, IsString } from 'class-validator';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { Role, Roles } from 'src/auth/roles/role.model';
+import { RolesGuard } from 'src/auth/roles/roles.guard';
+import { CurrentUser } from 'src/auth/roles/user.decorator';
 
 class ProcessingRequestDto {
   @IsNumber()
@@ -16,7 +19,7 @@ class ProcessingRequestDto {
   transactionId: string;
 }
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('/booking')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
@@ -30,12 +33,16 @@ export class BookingController {
     return BookingMapper.toResponse(booking);
   }
 
+  
+  @Roles(Role.SECRETARY, Role.PSYCHOLOGIST, Role.PATIENT)
   @Get()
   async getBookings(
+    @CurrentUser() user,
     @Query('patientId') patientId?: string,
     @Query('psychologistId') psychologistId?: string,
   ): Promise<BookingResponseDto[]> {
     const bookings = await this.bookingService.getBookings(
+      user,
       patientId ? Number(patientId) : undefined,
       psychologistId ? Number(psychologistId) : undefined,
     );
