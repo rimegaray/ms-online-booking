@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '../repository/user.repository';
-import { User } from '../model/user.model';
+import { User, UserProfile } from '../model/user.model';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -33,5 +33,14 @@ export class UserService {
 
   async deleteUser(userId: number): Promise<void> {
     return this.userRepository.delete(userId);
+  }
+
+  createUserPatient(user: User): Promise<User> {
+    user = {
+      ...user,
+      profile: UserProfile.PATIENT,
+    }
+    
+    return this.userRepository.create(user);
   }
 }

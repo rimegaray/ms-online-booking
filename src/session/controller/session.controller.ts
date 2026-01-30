@@ -7,12 +7,15 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { SessionService } from '../service/session.service';
 import { SessionResponseDto } from './dto/session-response.dto';
 import { SessionRequestDto } from './dto/session-request.dto';
 import { SessionMapper } from './mapper/session.mapper';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('/session')
 export class SessionController {
   constructor(private readonly sessionService: SessionService) {}

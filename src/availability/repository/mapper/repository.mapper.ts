@@ -3,20 +3,20 @@ import type { Availability } from '../../model/availability.model';
 export class AvailabilityRepositoryMapper {
   static toDomain(availabilityEntity: any): Availability {
     return {
-      availabilityId: availabilityEntity.availabilityId,
-      psychologistId: availabilityEntity.psychologistId,
-      timeRange: availabilityEntity.timeRange,
+      availabilityId: availabilityEntity.availability_id,
+      psychologistId: availabilityEntity.psychologist_id,
+      timeRange: availabilityEntity.time_range,
       date: availabilityEntity.date,
-      isActive: availabilityEntity.isActive,
+      isActive: availabilityEntity.is_active,
     };
   }
 
   static toEntity(availability: Availability): any {
     return {
-      psychologistId: availability.psychologistId,
-      timeRange: availability.timeRange,
+      psychologist_id: availability.psychologistId,
+      time_range: availability.timeRange,
       date: availability.date,
-      isActive: availability.isActive ?? true,
+      is_active: availability.isActive ?? true,
     };
   }
 }
