@@ -3,9 +3,9 @@ import { ServiceService } from "../service/service.service";
 import { ServiceRequestDto } from "./dto/service-request.dto";
 import { ServiceResponseDto } from "./dto/service-response.dto";
 import { ServiceMapper } from "./mapper/service.mapper";
-import { AuthGuard } from "@nestjs/passport";
+import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
 
-
+@UseGuards(JwtAuthGuard)
 @Controller('/service')
 export class ServiceController {
 
@@ -18,13 +18,11 @@ export class ServiceController {
         return ServiceMapper.toResponse(service);
     }
 
-    @UseGuards(AuthGuard)
     @Get()
     getAll(): Promise<ServiceResponseDto[]> {
         return this.serviceService.findService();
     }
 
-    @UseGuards(AuthGuard)
     @Get(':serviceId')
     getById(@Param('serviceId') serviceId: string): Promise<ServiceResponseDto> {
         return this.serviceService.findServiceById(Number(serviceId));

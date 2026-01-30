@@ -1,15 +1,49 @@
+import { IsBoolean, IsEnum, IsInt, IsOptional, IsPositive, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { UserProfile } from "src/user/model/user.model";
+
 export class UserRequestDto {
+
+  @IsString({ message: 'username: debe ser un texto' })
+  @MinLength(3, { message: 'username: debe tener al menos 3 caracteres' })
+  @MaxLength(20, { message: 'username: no puede tener más de 20 caracteres' })
   username: string;
 
+  @IsString({ message: 'password: debe ser un texto' })
+  @MinLength(6, { message: 'password: debe tener al menos 6 caracteres' })
+  @MaxLength(50, { message: 'password: no puede tener más de 50 caracteres' })
   password: string;
 
-  profile: string;
+  @IsEnum(UserProfile, {message: 'profile: El perfil debe ser uno de los siguientes valores: PATIENT, PSYCHOLOGIST, SECRETARY, ADMINISTRATOR'})
+  @IsOptional()
+  profile: UserProfile;
 
-  psychologistId: number;
-
+  @IsString({ message: 'name: debe ser un texto' })
+  @MinLength(1, { message: 'name: no puede estar vacío' })
+  @MaxLength(50, { message: 'name: no puede tener más de 50 caracteres' })
+  @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
+    message: 'name: solo puede contener letras y espacios',
+  })
   name: string;
 
+  @IsString({ message: 'lastname: debe ser un texto' })
+  @MinLength(1, { message: 'lastname: no puede estar vacío' })
+  @MaxLength(50, { message: 'lastname: no puede tener más de 50 caracteres' })
+  @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
+    message: 'lastname: solo puede contener letras y espacios',
+  })
   lastname: string;
-  patientId: number;
+
+  @IsInt({ message: 'patientId: debe ser un número entero' })
+  @IsPositive({ message: 'patientId: debe ser positivo' })
+  @IsOptional()
+  patientId?: number;
+
+  @IsInt({ message: 'psychologistId: debe ser un número entero' })
+  @IsPositive({ message: 'psychologistId: debe ser positivo' })
+  @IsOptional()
+  psychologistId?: number;
+
+  @IsBoolean({ message: 'isActive: debe ser un valor booleano' })
+  @IsOptional()
   isActive: boolean;
 }

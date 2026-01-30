@@ -6,12 +6,15 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { PatientService } from '../service/patient.service';
 import { PatientResponseDto } from './dto/patient-response.dto';
 import { PatientMapper } from './mapper/patient.mapper';
 import { PatientRequestDto } from './dto/patient-request.dto';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('/patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}

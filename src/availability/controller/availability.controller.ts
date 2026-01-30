@@ -1,9 +1,11 @@
-import { Controller, Post, Get, Body, Param, Query } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { AvailabilityRequestDto } from './dto/availability-request.dto';
 import type { AvailabilityResponseDto } from './dto/availability-response.dto';
 import { AvailabilityService } from '../service/availability.service';
 import { AvailabilityMapper } from './mapper/availability.mapper';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('availability')
 export class AvailabilityController {
   constructor(private readonly availabilityService: AvailabilityService) {}
@@ -19,11 +21,11 @@ export class AvailabilityController {
 
   @Get('unavailability')
   async getUnavailabilityByPsychologist(
-    @Query('psychologistId') psychologistId: number,
+    @Query('psychologistId') psychologistId: string,
   ): Promise<AvailabilityResponseDto[]> {
     const availabilities =
       await this.availabilityService.findInactiveByPsychologistId(
-        psychologistId,
+        Number(psychologistId),
       );
     return availabilities.map(AvailabilityMapper.toResponseDto);
   }
