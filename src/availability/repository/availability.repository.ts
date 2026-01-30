@@ -8,9 +8,11 @@ export class AvailabilityRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findByPsychologistId(psychologistId: number): Promise<Availability[]> {
+    console.log("psychologistId: ", psychologistId)
     const availabilityEntities = await this.prisma.availability.findMany({
       where: { psychologist_id: psychologistId },
     });
+    
     return availabilityEntities.map(AvailabilityRepositoryMapper.toDomain);
   }
 

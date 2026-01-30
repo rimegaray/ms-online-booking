@@ -7,12 +7,15 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PsychologistService } from '../service/psychologist.service';
 import { PsychologistResponseDto } from './dto/psychologist-response.dto';
 import { PsychologistRequestDto } from './dto/psychologist-request.dto';
 import { PsychologistMapper } from './mapper/psychologist.mapper';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('/psychologist')
 export class PsychologistController {
   constructor(private readonly psychologistService: PsychologistService) {}

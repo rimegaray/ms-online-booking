@@ -3,9 +3,9 @@ import { ServiceService } from "../service/service.service";
 import { ServiceRequestDto } from "./dto/service-request.dto";
 import { ServiceResponseDto } from "./dto/service-response.dto";
 import { ServiceMapper } from "./mapper/service.mapper";
-import { AuthGuard } from "@nestjs/passport";
+import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
 
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(JwtAuthGuard)
 @Controller('/service')
 export class ServiceController {
 

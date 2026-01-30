@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { BookingService } from '../service/booking.service';
 import { BookingRequestDto } from './dto/booking-request.dto';
 import { BookingResponseDto } from './dto/booking-response.dto';
 import { BookingMapper } from './mapper/booking.mapper';
 import { IsNumber, IsNotEmpty, IsString } from 'class-validator';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
 class ProcessingRequestDto {
   @IsNumber()
@@ -15,6 +16,7 @@ class ProcessingRequestDto {
   transactionId: string;
 }
 
+@UseGuards(JwtAuthGuard)
 @Controller('/booking')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
