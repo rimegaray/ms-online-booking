@@ -9,17 +9,18 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   getUsers(): Promise<UserResponseDto[]> {
     return this.userService.getUsers();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':userId')
   getUserById(@Param('userId') userId: string): Promise<UserResponseDto> {
     return this.userService.getUserById(Number(userId));
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('patient')
   async postUserPatient(
     @Body() userRequestDto: UserRequestDto,
@@ -29,6 +30,7 @@ export class UserController {
     return UserMapper.toResponse(newUser);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async postUser(
     @Body() userRequestDto: UserRequestDto,

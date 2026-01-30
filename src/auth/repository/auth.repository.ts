@@ -11,4 +11,45 @@ export class AuthRepository {
             where: { username: username },
         })
     }
+
+    async saved(userId: number, refreshToken: string) {
+        return this.prisma.auth.create({
+            data: {
+                user_id: userId,
+                refresh_token: refreshToken,
+                expires_at: new Date(Date.now() + 120 * 60 * 1000)
+            }
+        })
+    }
+
+    async findByRefreshToken(refreshToken: string) {
+        return await this.prisma.auth.findFirst({
+            where: { refresh_token: refreshToken },
+        });
+    }
+
+    async updateRefreshToken(authId: number, refreshToken: string, expiresAt: Date) {
+
+        const updateCreateAt = new Date(Date.now());
+        return await this.prisma.auth.update({
+            where: { auth_id: authId},
+            data: {
+                refresh_token: refreshToken,
+                created_at: updateCreateAt,
+                expires_at: expiresAt
+            },
+        });
+    }
+
+    async deleteByRefreshToken(refreshToken: string) {
+        return await this.prisma.auth.deleteMany({
+            where: {refresh_token: refreshToken},
+        });
+    }
+
+    async deleteAllByUserId(userId: number) {
+        return await this.prisma.auth.deleteMany({
+            where: { user_id: userId },
+        });
+    }
 }

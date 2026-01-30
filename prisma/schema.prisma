@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:123456789@localhost:3306/db_patient_management"
+  url      = env("DATABASE_URL")
 }
 
 model availability {
@@ -111,4 +111,12 @@ model user {
   patient_id      Int?
   psychologist_id Int?
   is_active       Boolean @default(true)
+}
+
+model auth {
+  auth_id         Int      @id @default(autoincrement())
+  user_id         Int
+  refresh_token   String
+  created_at      DateTime @default(now())
+  expires_at      DateTime
 }
