@@ -19,6 +19,10 @@ export class BookingService {
   constructor(private readonly bookingRepository: BookingRepository) {}
 
   createBooking(booking: Booking): Promise<Booking> {
+    booking = {
+      ...booking,
+      bookingDate: new Date(Date.now())
+    }
     return this.bookingRepository.create(booking);
   }
 

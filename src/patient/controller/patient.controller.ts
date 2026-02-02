@@ -28,7 +28,7 @@ export class PatientController {
   @UseGuards(JwtAuthGuard)
   @Get(':patientId')
   async getPatientById(
-    @Param('patientId') patientId: String,
+    @Param('patientId') patientId: string,
   ): Promise<PatientResponseDto> {
     const patient = await this.patientService.getPatientById(Number(patientId));
     return PatientMapper.toResponse(patient);
@@ -55,7 +55,7 @@ export class PatientController {
       ...model,
       patientId: Number(patientId),
     };
-    const patient = await this.patientService.createPatient(model);
+    const patient = await this.patientService.updatePatient(model);
     return PatientMapper.toResponse(patient);
   }
 

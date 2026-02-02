@@ -3,7 +3,7 @@ import { BookingService } from '../service/booking.service';
 import { BookingRequestDto } from './dto/booking-request.dto';
 import { BookingResponseDto } from './dto/booking-response.dto';
 import { BookingMapper } from './mapper/booking.mapper';
-import { IsNumber, IsNotEmpty, IsString } from 'class-validator';
+import { IsNumber, IsNotEmpty, IsString, Matches } from 'class-validator';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { Role, Roles } from 'src/auth/roles/role.model';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
@@ -16,6 +16,9 @@ class ProcessingRequestDto {
 
   @IsString()
   @IsNotEmpty()
+  @Matches(/^\d{8}$/, {
+    message: 'Debe contener exactamente 8 dígitos numéricos',
+  })
   transactionId: string;
 }
 

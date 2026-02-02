@@ -34,6 +34,7 @@ export class AuthService {
         name: user.name,
         lastname: user.lastname,
         username: user.username,
+        patientId: user.patient_id,
         profile: user.profile,
       },
       payload: {
