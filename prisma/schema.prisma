@@ -108,8 +108,7 @@ model user {
   profile         String?  @db.VarChar(50)
   name            String?  @db.VarChar(70)
   lastname        String?  @db.VarChar(70)
-  patient_id      Int?
-  psychologist_id Int?
+  entity_id       Int
   is_active       Boolean @default(true)
 }
 
@@ -117,6 +116,7 @@ model auth {
   auth_id         Int      @id @default(autoincrement())
   user_id         Int
   refresh_token   String
+  entity_id       Int
   created_at      DateTime @default(now())
   expires_at      DateTime
 }

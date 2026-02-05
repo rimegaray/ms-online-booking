@@ -43,11 +43,13 @@ export class BookingController {
     @CurrentUser() user,
     @Query('patientId') patientId?: string,
     @Query('psychologistId') psychologistId?: string,
+    @Query('bookingDate') bookingDate?: string 
   ): Promise<BookingResponseDto[]> {
     const bookings = await this.bookingService.getBookings(
       user,
       patientId ? Number(patientId) : undefined,
       psychologistId ? Number(psychologistId) : undefined,
+      bookingDate,
     );
     return bookings.map((booking) => BookingMapper.toResponse(booking));
   }

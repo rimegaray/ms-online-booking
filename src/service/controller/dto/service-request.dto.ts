@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class ServiceRequestDto {
 
@@ -14,9 +14,10 @@ export class ServiceRequestDto {
     price: number;
 
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     image: string;
 
     @IsBoolean()
+    @IsOptional()
     isActive: boolean;
 }

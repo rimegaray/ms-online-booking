@@ -11,8 +11,7 @@ export class UserMapper {
       profile: dto.profile,
       name: dto.name.trim(),
       lastname: dto.lastname.trim(),
-      patientId: dto.patientId,
-      psychologistId: dto.psychologistId,
+      entityId: dto.entityId,
       isActive: dto.isActive,
     };
   }
@@ -25,8 +24,7 @@ export class UserMapper {
       profile: model.profile,
       name: model.name,
       lastname: model.lastname,
-      patientId: model.patientId,
-      psychologistId: model.psychologistId,
+      entityId: model.entityId,
       isActive: model.isActive,
     };
   }

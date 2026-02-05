@@ -11,8 +11,7 @@ export class RepositoryMapper {
       profile: prismaUser.profile,
       name: prismaUser.name,
       lastname: prismaUser.lastname,
-      patientId: prismaUser.patient_id,
-      psychologistId: prismaUser.psychologist_id,
+      entityId: prismaUser.entity_id,
       isActive: prismaUser.is_active,
     };
   }

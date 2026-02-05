@@ -12,11 +12,12 @@ export class AuthRepository {
         })
     }
 
-    async saved(userId: number, refreshToken: string) {
+    async saved(userId: number, refreshToken: string, entityId: number) {
         return this.prisma.auth.create({
             data: {
                 user_id: userId,
                 refresh_token: refreshToken,
+                entity_id: entityId,
                 expires_at: new Date(Date.now() + 120 * 60 * 1000)
             }
         })
