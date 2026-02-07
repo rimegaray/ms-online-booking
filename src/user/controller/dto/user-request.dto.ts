@@ -33,15 +33,9 @@ export class UserRequestDto {
   })
   lastname: string;
 
-  @IsInt({ message: 'patientId: debe ser un número entero' })
-  @IsPositive({ message: 'patientId: debe ser positivo' })
-  @IsOptional()
-  patientId?: number;
-
-  @IsInt({ message: 'psychologistId: debe ser un número entero' })
-  @IsPositive({ message: 'psychologistId: debe ser positivo' })
-  @IsOptional()
-  psychologistId?: number;
+  @IsInt({ message: 'entityId: debe ser un número entero' })
+  @IsPositive({ message: 'entityId: debe ser positivo' })
+  entityId: number;
 
   @IsBoolean({ message: 'isActive: debe ser un valor booleano' })
   @IsOptional()

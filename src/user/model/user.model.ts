@@ -5,8 +5,7 @@ export interface User {
   profile?: string;
   name: string;
   lastname: string;
-  patientId?: number;
-  psychologistId?: number;
+  entityId: number;
   isActive: boolean;
 }
 

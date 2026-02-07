@@ -3,13 +3,11 @@ import { AuthService } from '../service/auth.service';
 import { AuthRequestDto } from './dto/auth-request.dto';
 import { JwtService } from '@nestjs/jwt';
 import type { Request, Response } from 'express';
-import { randomUUID } from 'crypto';
 
 @Controller('/auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly jwtService: JwtService,
   ) {}
 
   @Post()
@@ -17,31 +15,7 @@ export class AuthController {
     @Body() authRequestDto: AuthRequestDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { user, payload } = await this.authService.authorize(authRequestDto);
-
-    const token = this.jwtService.sign(payload);
-
-    const refreshToken = randomUUID();
-
-    await this.authService.saveRefreshToken(user.userId, refreshToken);
-
-    res.cookie('access_token', token, {
-      httpOnly: true,
-      secure: false, //(cambiar a true en en producción)
-      sameSite: 'lax', //TODO: 'strict' en producción
-      maxAge: 10 * 60 * 1000,
-      path: '/',
-    });
-
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: false, //(cambiar a true en en producción)
-      sameSite: 'lax',
-      maxAge: 120 * 60 * 1000,
-      path: '/',
-    });
-
-    return { message: 'Login exitoso', user };
+    return await this.authService.getToken(authRequestDto, res);
   }
 
   @Post('refresh')

@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken';
 import { Role } from "../roles/role.model";
 
 export interface AuthUser {
-  userId: number;
+  entityId: number;
   username: string;
   role: Role;
 }

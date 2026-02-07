@@ -38,6 +38,7 @@ export class BookingRepository {
   async findAll(
     patientId?: number,
     psychologistId?: number,
+    bookingDate?: string,
   ): Promise<Booking[]> {
     const where: any = {};
 
@@ -49,6 +50,16 @@ export class BookingRepository {
       where.psychologist_id = psychologistId;
     }
 
+    if(bookingDate) {
+      const start = new Date(`${bookingDate}T00:00:00.000Z`);
+      const end = new Date(`${bookingDate}T23:59:59.999Z`);
+      
+      where.booking_date = {
+        gte: start,
+        lte: end,
+      }
+    }
+
     const list = await this.prisma.booking.findMany({
       where,
       include: {
@@ -56,6 +67,9 @@ export class BookingRepository {
         psychologist: true,
         service: true,
       },
+      orderBy: {
+        booking_date: 'asc',
+      }
     });
 
     return list.map((booking) => RepositoryMapper.toDomain(booking));
@@ -107,5 +121,18 @@ export class BookingRepository {
     })
 
     return RepositoryMapper.toPaymentDomain(statusUpdate);
+  }
+
+  async findByBookingDate(bookingDate: string): Promise<Booking[]> {
+    const start = new Date(`${bookingDate}T00:00:00.000Z`);
+    const end = new Date(`${bookingDate}T23:59:59.999Z`);
+    const getBookingByDate = await this.prisma.booking.findMany({
+      where: { booking_date: {
+        gte: start,
+        lte: end,
+      } },
+    });
+
+    return getBookingByDate.map((booking) => RepositoryMapper.toDomain(booking));
   }
 }

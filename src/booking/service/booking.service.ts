@@ -19,6 +19,10 @@ export class BookingService {
   constructor(private readonly bookingRepository: BookingRepository) {}
 
   createBooking(booking: Booking): Promise<Booking> {
+    booking = {
+      ...booking,
+      bookingDate: new Date(Date.now())
+    }
     return this.bookingRepository.create(booking);
   }
 
@@ -30,12 +34,15 @@ export class BookingService {
     user: AuthUser,
     patientId?: number,
     psychologistId?: number,
+    bookingDate?: string,
   ): Promise<Booking[]> {
     const filters = this.buildFiltersByRole(user, patientId, psychologistId);
 
+    console.log("jajajaja: ", filters)
     return this.bookingRepository.findAll(
       filters.patientId,
       filters.psychologistId,
+      bookingDate
     );
   }
 
@@ -44,17 +51,18 @@ export class BookingService {
     patientId?: number,
     psychologistId?: number,
   ) {
+    console.log("ROL: ", user.role)
     switch (user.role) {
       case Role.PATIENT:
         return {
-          patientId: user.userId,
+          patientId: user.entityId,
           psychologistId: undefined,
         };
 
       case Role.PSYCHOLOGIST:
         return {
           patientId: patientId ? Number(patientId) : undefined,
-          psychologistId: user.userId,
+          psychologistId: user.entityId,
         };
 
       case Role.SECRETARY:
@@ -134,5 +142,9 @@ export class BookingService {
     );
 
     return booking;
+  }
+
+  getByDate(bookingDate: string): Promise<Booking[]> {
+    return this.bookingRepository.findByBookingDate(bookingDate);
   }
 }

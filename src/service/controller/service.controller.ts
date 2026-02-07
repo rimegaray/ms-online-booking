@@ -14,8 +14,6 @@ export class ServiceController {
     @Post()
     async createService(@Body() serviceRequestDto: ServiceRequestDto): Promise<ServiceResponseDto> {
         const model = ServiceMapper.toModel(serviceRequestDto);
-        console.log('asasdasd', serviceRequestDto)
-    console.log('asasdasd2222', model)
         const service = await this.serviceService.createService(model);
         return ServiceMapper.toResponse(service);
     }
