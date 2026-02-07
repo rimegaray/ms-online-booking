@@ -8,6 +8,14 @@ import * as bcrypt from 'bcrypt';
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findByUsername(username: string) {
+    const found = await this.prisma.user.findUnique({
+      where: { username: username },
+    });
+
+    return RepositoryMapper.toDomain(found);
+  }
+
   async findAll(): Promise<User[]> {
     const list = await this.prisma.user.findMany();
     return list.map((user) => RepositoryMapper.toDomain(user));

@@ -1,21 +1,18 @@
 import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { AuthRequestDto } from './dto/auth-request.dto';
-import { JwtService } from '@nestjs/jwt';
 import type { Request, Response } from 'express';
 
 @Controller('/auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post()
-  async authorization(
+  async authorize(
     @Body() authRequestDto: AuthRequestDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return await this.authService.getToken(authRequestDto, res);
+    return await this.authService.authorize(authRequestDto, res);
   }
 
   @Post('refresh')
