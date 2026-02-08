@@ -43,8 +43,8 @@ export class UserService {
     user = {
       ...user,
       profile: UserProfile.PATIENT,
-    }
-    
+    };
+
     return this.userRepository.create(user);
   }
 }

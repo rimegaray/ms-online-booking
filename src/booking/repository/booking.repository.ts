@@ -122,17 +122,4 @@ export class BookingRepository {
 
     return RepositoryMapper.toPaymentDomain(statusUpdate);
   }
-
-  async findByBookingDate(bookingDate: string): Promise<Booking[]> {
-    const start = new Date(`${bookingDate}T00:00:00.000Z`);
-    const end = new Date(`${bookingDate}T23:59:59.999Z`);
-    const getBookingByDate = await this.prisma.booking.findMany({
-      where: { booking_date: {
-        gte: start,
-        lte: end,
-      } },
-    });
-
-    return getBookingByDate.map((booking) => RepositoryMapper.toDomain(booking));
-  }
 }

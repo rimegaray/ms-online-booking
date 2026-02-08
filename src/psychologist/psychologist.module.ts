@@ -7,7 +7,12 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
 @Module({
   controllers: [PsychologistController],
-  providers: [PsychologistService, PsychologistRepository, PrismaService, JwtAuthGuard],
+  providers: [
+    PsychologistService,
+    PsychologistRepository,
+    PrismaService,
+    JwtAuthGuard,
+  ],
   exports: [PsychologistService],
 })
 export class PsychologistModule {}

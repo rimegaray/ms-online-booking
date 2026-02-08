@@ -7,7 +7,12 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
 @Module({
   controllers: [AvailabilityController],
-  providers: [AvailabilityService, AvailabilityRepository, PrismaService, JwtAuthGuard],
+  providers: [
+    AvailabilityService,
+    AvailabilityRepository,
+    PrismaService,
+    JwtAuthGuard,
+  ],
   exports: [AvailabilityService],
 })
 export class AvailabilityModule {}

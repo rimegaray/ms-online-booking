@@ -29,7 +29,7 @@ export class UserRepository {
   }
 
   async create(user: User): Promise<User> {
-    console.log("USER: ", user)
+    console.log('USER: ', user);
     const passwordEncryp = await bcrypt.hash(user.password, 12);
     const created = await this.prisma.user.create({
       data: {
@@ -65,7 +65,7 @@ export class UserRepository {
 
   async delete(userId: number): Promise<void> {
     await this.prisma.user.delete({
-      where: { user_id: userId }
-    })
+      where: { user_id: userId },
+    });
   }
 }

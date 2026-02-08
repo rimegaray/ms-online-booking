@@ -38,7 +38,6 @@ export class BookingService {
   ): Promise<Booking[]> {
     const filters = this.buildFiltersByRole(user, patientId, psychologistId);
 
-    console.log("jajajaja: ", filters)
     return this.bookingRepository.findAll(
       filters.patientId,
       filters.psychologistId,
@@ -51,7 +50,6 @@ export class BookingService {
     patientId?: number,
     psychologistId?: number,
   ) {
-    console.log("ROL: ", user.role)
     switch (user.role) {
       case Role.PATIENT:
         return {
@@ -142,9 +140,5 @@ export class BookingService {
     );
 
     return booking;
-  }
-
-  getByDate(bookingDate: string): Promise<Booking[]> {
-    return this.bookingRepository.findByBookingDate(bookingDate);
   }
 }
