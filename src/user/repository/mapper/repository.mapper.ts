@@ -9,8 +9,6 @@ export class RepositoryMapper {
       username: prismaUser.username,
       password: prismaUser.password,
       profile: prismaUser.profile,
-      name: prismaUser.name,
-      lastname: prismaUser.lastname,
       entityId: prismaUser.entity_id,
       isActive: prismaUser.is_active,
     };

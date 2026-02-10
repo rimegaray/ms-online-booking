@@ -106,8 +106,6 @@ model user {
   username        String   @unique(map: "username") @db.VarChar(255)
   password        String   @db.VarChar(255)
   profile         String?  @db.VarChar(50)
-  name            String?  @db.VarChar(70)
-  lastname        String?  @db.VarChar(70)
   entity_id       Int
   is_active       Boolean @default(true)
 }

@@ -17,22 +17,6 @@ export class UserRequestDto {
   @IsOptional()
   profile: UserProfile;
 
-  @IsString({ message: 'name: debe ser un texto' })
-  @MinLength(1, { message: 'name: no puede estar vacío' })
-  @MaxLength(50, { message: 'name: no puede tener más de 50 caracteres' })
-  @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
-    message: 'name: solo puede contener letras y espacios',
-  })
-  name: string;
-
-  @IsString({ message: 'lastname: debe ser un texto' })
-  @MinLength(1, { message: 'lastname: no puede estar vacío' })
-  @MaxLength(50, { message: 'lastname: no puede tener más de 50 caracteres' })
-  @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
-    message: 'lastname: solo puede contener letras y espacios',
-  })
-  lastname: string;
-
   @IsInt({ message: 'entityId: debe ser un número entero' })
   @IsPositive({ message: 'entityId: debe ser positivo' })
   entityId: number;
