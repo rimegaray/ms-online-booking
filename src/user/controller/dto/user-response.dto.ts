@@ -3,8 +3,6 @@ export class UserResponseDto {
   username: string;
   password: string;
   profile?: string;
-  name: string;
-  lastname: string;
   entityId: number;
   isActive: boolean;
 }
