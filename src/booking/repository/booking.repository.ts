@@ -122,4 +122,16 @@ export class BookingRepository {
 
     return RepositoryMapper.toPaymentDomain(statusUpdate);
   }
+
+  async updateBooking(bookingId: number, booking: Partial<Booking>): Promise<Booking> {
+    const updatedBooking = await this.prisma.booking.update({
+      where: { booking_id: bookingId},
+      data: {
+        time_range: booking.timeRange,
+        notes: booking.notes,
+      },
+    })
+
+    return RepositoryMapper.toDomain(updatedBooking); 
+  }
 }

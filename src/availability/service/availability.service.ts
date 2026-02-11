@@ -51,10 +51,10 @@ export class AvailabilityService {
     );
   }
 
-  async findInactiveByPsychologistId(
+  async findInactiveAndReservedByPsychologistId(
     psychologistId: number,
   ): Promise<Availability[]> {
-    return this.availabilityRepository.findInactiveByPsychologistId(
+    return this.availabilityRepository.findInactiveAndReservedByPsychologistId(
       psychologistId,
     );
   }

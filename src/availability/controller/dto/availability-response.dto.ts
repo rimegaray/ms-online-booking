@@ -3,5 +3,5 @@ export interface AvailabilityResponseDto {
   psychologistId: number;
   date?: Date | null;
   timeRange: string;
-  isActive?: boolean;
+  isActive?: string;
 }

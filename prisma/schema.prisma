@@ -12,7 +12,7 @@ model availability {
   psychologist_id Int
   date            DateTime? @db.Date
   time_range      String    @db.VarChar(20)
-  is_active       Boolean?  @default(true)
+  is_active       String?   @db.VarChar(20)
 }
 
 model booking {

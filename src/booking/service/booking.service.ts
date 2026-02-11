@@ -16,7 +16,9 @@ import { Role } from 'src/auth/roles/role.model';
 
 @Injectable()
 export class BookingService {
-  constructor(private readonly bookingRepository: BookingRepository) {}
+  constructor(
+    private readonly bookingRepository: BookingRepository,
+  ) {}
 
   createBooking(booking: Booking): Promise<Booking> {
     booking = {
@@ -140,5 +142,9 @@ export class BookingService {
     );
 
     return booking;
+  }
+
+  async updateBooking(bookingId: number, booking: Partial<Booking>): Promise<Booking> {
+    return await this.bookingRepository.updateBooking(bookingId, booking);
   }
 }

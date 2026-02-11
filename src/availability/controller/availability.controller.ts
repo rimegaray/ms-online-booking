@@ -32,7 +32,7 @@ export class AvailabilityController {
     @Query('psychologistId') psychologistId: string,
   ): Promise<AvailabilityResponseDto[]> {
     const availabilities =
-      await this.availabilityService.findInactiveByPsychologistId(
+      await this.availabilityService.findInactiveAndReservedByPsychologistId(
         Number(psychologistId),
       );
     return availabilities.map(AvailabilityMapper.toResponseDto);
