@@ -28,6 +28,7 @@ export class PsychologistMapper {
       age: model.age,
       specialty: model.specialty,
       phoneNumber: model.phoneNumber,
+      admissionDate: model.admissionDate,
       address: model.address,
       dni: model.dni,
       email: model.email,

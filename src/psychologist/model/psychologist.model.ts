@@ -9,6 +9,7 @@ export interface Psychologist {
   dni: string;
   email: string;
   experience: string;
+  admissionDate?: Date;
   photo: string;
   isActive: boolean;
 }

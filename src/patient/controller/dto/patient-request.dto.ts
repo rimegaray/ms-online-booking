@@ -16,44 +16,41 @@ export class PatientRequestDto {
   @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
     message: 'name: solo puede contener letras y espacios',
   })
-  name: string;
+  name!: string;
 
   @IsString({ message: 'El apellido debe ser un texto' })
   @IsNotEmpty({ message: 'El apellido no puede estar vacío' })
-  @Length(0, 255,  { message: 'El apellido debe tener entre 1 y 255 caracteres' })
+  @Length(0, 255, { message: 'El apellido debe tener entre 1 y 255 caracteres' })
   @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
     message: 'lastname: solo puede contener letras y espacios',
   })
-  lastname: string;
+  lastname!: string;
 
   @IsInt({ message: 'La edad debe ser un número entero' })
   @Min(1, { message: 'La edad mínima es 1 año' })
   @Max(99, { message: 'La edad máxima es 99 años' })
-  age: number;
+  age!: number;
 
   @IsString({ message: 'El DNI debe ser un texto' })
   @Length(8, 8, { message: 'El DNI debe tener exactamente 8 dígitos' })
   @Matches(/^\d{8}$/, { message: 'El DNI solo debe contener números' })
-  dni: string;
+  dni!: string;
 
   @IsString({ message: 'El número de celular debe ser un texto' })
   @Matches(/^9\d{8}$/, {
     message: 'El número de celular debe empezar con 9 y tener 9 dígitos',
   })
-  phoneNumber: string;
+  phoneNumber!: string;
 
   @IsString({ message: 'El nombre del tutor debe ser un texto' })
   @IsNotEmpty({ message: 'El nombre del tutor no puede estar vacío' })
-  @Length(0, 255,{
+  @Length(0, 255, {
     message: 'El nombre del tutor debe tener entre 1 y 255 caracteres',
   })
   @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
     message: 'El nombre del tutor solo puede contener letras y espacios',
   })
-  tutorName: string;
-
-  @IsOptional()
-  admissionDate?: string;
+  tutorName!: string;
 
   @IsOptional()
   @IsString({ message: 'Las observaciones deben ser un texto' })
@@ -63,7 +60,7 @@ export class PatientRequestDto {
   observations?: string;
 
   @IsOptional()
-  lastSessionDate?: string;
+  lastSessionDate?: Date;
 
   @IsOptional()
   @IsString({ message: 'El consentimiento firmado debe ser un texto' })

@@ -54,7 +54,6 @@ export class ServiceController {
 
   @Delete(':serviceId')
   deleteService(@Param('serviceId') serviceId: string): Promise<void> {
-    console.log('Serviceid ingresado: ', serviceId);
     return this.serviceService.deleteService(Number(serviceId));
   }
 }

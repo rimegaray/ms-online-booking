@@ -14,46 +14,46 @@ export class PsychologistRequestDto {
   @IsString()
   @IsNotEmpty()
   @Length(0, 255)
-  name: string;
+  name!: string;
 
   @IsString()
   @IsNotEmpty()
   @Length(0, 255)
-  lastname: string;
+  lastname!: string;
 
   @IsInt()
   @Min(1)
   @Max(99)
-  age: number;
+  age!: number;
 
   @IsString()
   @IsNotEmpty()
-  specialty: string;
+  specialty!: string;
 
   @Matches(/^9\d{8}$/)
-  phoneNumber: string;
+  phoneNumber!: string;
 
   @IsOptional()
   @IsString()
   address?: string;
 
   @Length(8, 8)
-  dni: string;
+  dni!: string;
 
   @Length(0, 75)
   @Matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-  email: string;
+  email!: string;
 
   @IsString()
   @IsNotEmpty()
   @Length(0, 255)
-  experience: string;
+  experience!: string;
 
   @IsString()
   @IsNotEmpty()
   @Length(0, 255)
-  photo: string;
+  photo!: string;
 
   @IsBoolean()
-  isActive: boolean;
+  isActive!: boolean;
 }

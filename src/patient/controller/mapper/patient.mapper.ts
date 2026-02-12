@@ -1,6 +1,7 @@
 import { Patient } from 'src/patient/model/patient.model';
 import { PatientRequestDto } from '../dto/patient-request.dto';
 import { PatientResponseDto } from '../dto/patient-response.dto';
+import { UpdatePatientRequestDto } from '../dto/update-patient-request.dto';
 
 export class PatientMapper {
   static toModel(patientRequestDto: PatientRequestDto): Patient {
@@ -12,13 +13,12 @@ export class PatientMapper {
       dni: patientRequestDto.dni,
       phoneNumber: patientRequestDto.phoneNumber,
       tutorName: patientRequestDto.tutorName.trim(),
-      admissionDate: patientRequestDto.admissionDate ?? '',
       observations: patientRequestDto.observations?.trim() ?? '',
-      lastSessionDate: patientRequestDto.lastSessionDate ?? '',
+      lastSessionDate: patientRequestDto.lastSessionDate,
       signedConsent: patientRequestDto.signedConsent
         ? Uint8Array.from(
             Buffer.from(patientRequestDto.signedConsent, 'base64'),
-          ) // ✅
+          )
         : null,
     };
   }
@@ -39,5 +39,11 @@ export class PatientMapper {
         ? Buffer.from(model.signedConsent).toString('base64')
         : null,
     };
+  }
+
+  static toUpdateModel(dto: UpdatePatientRequestDto): Partial<Patient> {
+    return {
+      lastSessionDate: dto.lastSessionDate,
+    }
   }
 }
