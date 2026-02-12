@@ -11,6 +11,7 @@ export class RepositoryMapper {
       age: prismaPsychologist.age,
       specialty: prismaPsychologist.specialty,
       phoneNumber: prismaPsychologist.phone_number,
+      admissionDate: prismaPsychologist.admission_date,
       address: prismaPsychologist.address ?? undefined,
       dni: prismaPsychologist.dni,
       email: prismaPsychologist.email,

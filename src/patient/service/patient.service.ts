@@ -25,4 +25,8 @@ export class PatientService {
   deletePatient(patientId: number): Promise<void> {
     return this.patientRepository.delete(patientId);
   }
+
+  patchPatient(patientId: number, patient: Partial<Patient>): Promise<Patient> {
+    return this.patientRepository.patch(patientId, patient);
+  }
 }

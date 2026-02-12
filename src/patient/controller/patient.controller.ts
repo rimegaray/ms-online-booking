@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   UseGuards,
@@ -13,6 +14,7 @@ import { PatientResponseDto } from './dto/patient-response.dto';
 import { PatientMapper } from './mapper/patient.mapper';
 import { PatientRequestDto } from './dto/patient-request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { UpdatePatientRequestDto } from './dto/update-patient-request.dto';
 
 @Controller('/patient')
 export class PatientController {
@@ -63,5 +65,13 @@ export class PatientController {
   @Delete(':patientId')
   deletePatient(@Param('patientId') patientId: string): Promise<void> {
     return this.patientService.deletePatient(Number(patientId));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':patientId')
+  async updateSessionDate(@Param('patientId') patientId: string, @Body() request: UpdatePatientRequestDto): Promise<PatientResponseDto> {
+    const model = PatientMapper.toUpdateModel(request);
+    const patient = await this.patientService.patchPatient(Number(patientId),model);
+    return PatientMapper.toResponse(patient);
   }
 }

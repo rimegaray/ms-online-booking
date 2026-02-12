@@ -6,8 +6,8 @@ export interface Patient {
   dni: string;
   phoneNumber: string;
   tutorName: string;
-  admissionDate: string;
+  admissionDate?: Date;
   observations: string;
-  lastSessionDate: string;
+  lastSessionDate?: Date;
   signedConsent: Uint8Array | null;
 }

@@ -29,13 +29,13 @@ export class UserRepository {
   }
 
   async create(user: User): Promise<User> {
-    console.log('USER: ', user);
     const passwordEncryp = await bcrypt.hash(user.password, 12);
     const created = await this.prisma.user.create({
       data: {
         username: user.username,
         password: passwordEncryp,
         profile: user.profile,
+        email: user.email,
         entity_id: user.entityId,
         is_active: true,
       },
@@ -51,6 +51,7 @@ export class UserRepository {
         username: user.username,
         password: user.password,
         profile: user.profile,
+        email: user.email,
         entity_id: user.entityId,
         is_active: user.isActive,
       },

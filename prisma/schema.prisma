@@ -33,16 +33,16 @@ model booking {
 }
 
 model patient {
-  patient_id        Int     @id @default(autoincrement())
-  name              String  @db.VarChar(255)
-  lastname          String  @db.VarChar(255)
+  patient_id        Int       @id @default(autoincrement())
+  name              String    @db.VarChar(255)
+  lastname          String    @db.VarChar(255)
   age               Int?
-  dni               String? @db.VarChar(255)
-  phone_number      String? @db.VarChar(255)
-  tutor_name        String? @db.VarChar(255)
-  admission_date    String? @db.VarChar(255)
-  observations      String? @db.VarChar(255)
-  last_session_date String? @db.VarChar(255)
+  dni               String?   @db.VarChar(255)
+  phone_number      String?   @db.VarChar(255)
+  tutor_name        String?   @db.VarChar(255)
+  admission_date    DateTime? @default(now()) @db.DateTime(0)
+  observations      String?   @db.VarChar(255)
+  last_session_date DateTime?
   signed_consent    Bytes?
 
   bookings booking[]
@@ -65,18 +65,19 @@ model payment {
 }
 
 model psychologist {
-  psychologist_id Int     @id @default(autoincrement())
-  name            String  @db.VarChar(255)
-  lastname        String  @db.VarChar(255)
+  psychologist_id Int       @id @default(autoincrement())
+  name            String    @db.VarChar(255)
+  lastname        String    @db.VarChar(255)
   age             Int
-  specialty       String  @db.VarChar(255)
-  experience      String  @db.VarChar(255)
-  is_active       Boolean @default(true)
-  address         String? @db.VarChar(255)
-  email           String? @db.VarChar(75)
-  dni             String? @db.VarChar(8)
-  phone_number    String? @db.VarChar(255)
-  photo           String? @db.VarChar(255)
+  specialty       String    @db.VarChar(255)
+  experience      String    @db.VarChar(255)
+  is_active       Boolean   @default(true)
+  address         String?   @db.VarChar(255)
+  email           String?   @db.VarChar(75)
+  dni             String?   @db.VarChar(8)
+  phone_number    String?   @db.VarChar(255)
+  admission_date  DateTime? @default(now()) @db.DateTime(0)
+  photo           String?   @db.VarChar(255)
 
   bookings booking[]
 }
@@ -102,19 +103,20 @@ model session {
 }
 
 model user {
-  user_id         Int      @id @default(autoincrement())
-  username        String   @unique(map: "username") @db.VarChar(255)
-  password        String   @db.VarChar(255)
-  profile         String?  @db.VarChar(50)
-  entity_id       Int
-  is_active       Boolean @default(true)
+  user_id   Int     @id @default(autoincrement())
+  username  String  @unique(map: "username") @db.VarChar(255)
+  password  String  @db.VarChar(255)
+  profile   String? @db.VarChar(50)
+  email     String? @db.VarChar(75)
+  entity_id Int
+  is_active Boolean @default(true)
 }
 
 model auth {
-  auth_id         Int      @id @default(autoincrement())
-  user_id         Int      @unique
-  refresh_token   String
-  entity_id       Int
-  created_at      DateTime @default(now())
-  expires_at      DateTime
+  auth_id       Int      @id @default(autoincrement())
+  user_id       Int      @unique
+  refresh_token String
+  entity_id     Int
+  created_at    DateTime @default(now())
+  expires_at    DateTime
 }

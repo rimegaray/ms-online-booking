@@ -16,7 +16,7 @@ export class PatientRepository {
         dni: patient.dni,
         phone_number: patient.phoneNumber,
         tutor_name: patient.tutorName,
-        admission_date: patient.admissionDate,
+        //admission_date: patient.admissionDate,
         observations: patient.observations,
         last_session_date: patient.lastSessionDate,
         signed_consent: patient.signedConsent
@@ -50,7 +50,6 @@ export class PatientRepository {
         dni: patient.dni,
         phone_number: patient.phoneNumber,
         tutor_name: patient.tutorName,
-        admission_date: patient.admissionDate,
         observations: patient.observations,
         last_session_date: patient.lastSessionDate,
         signed_consent: patient.signedConsent
@@ -66,5 +65,16 @@ export class PatientRepository {
     await this.prisma.patient.delete({
       where: { patient_id: id },
     });
+  }
+
+  async patch(patientId: number, patient: Partial<Patient>): Promise<Patient> {
+    const updatedSessionDate = await this.prisma.patient.update({
+      where: { patient_id: patientId },
+      data: {
+        last_session_date: patient.lastSessionDate,
+      },
+    });
+
+    return RepositoryMapper.toDomain(updatedSessionDate);
   }
 }

@@ -9,6 +9,7 @@ export class UserMapper {
       username: dto.username.trim(),
       password: dto.password.trim(),
       profile: dto.profile,
+      email: dto.email,
       entityId: dto.entityId,
       isActive: dto.isActive,
     };
@@ -20,6 +21,7 @@ export class UserMapper {
       username: model.username,
       password: model.password,
       profile: model.profile,
+      email: model.email,
       entityId: model.entityId,
       isActive: model.isActive,
     };
