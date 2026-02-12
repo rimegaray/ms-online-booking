@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/service/prisma.service';
-import type { Availability } from '../model/availability.model';
+import { AvailabilityStatus, type Availability } from '../model/availability.model';
 import { AvailabilityRepositoryMapper } from './mapper/repository.mapper';
 
 @Injectable()
@@ -16,13 +16,15 @@ export class AvailabilityRepository {
     return availabilityEntities.map(AvailabilityRepositoryMapper.toDomain);
   }
 
-  async findInactiveByPsychologistId(
+  async findInactiveAndReservedByPsychologistId(
     psychologistId: number,
   ): Promise<Availability[]> {
     const availabilityEntities = await this.prisma.availability.findMany({
       where: {
         psychologist_id: psychologistId,
-        is_active: false,
+        is_active: {
+          in:[AvailabilityStatus.INACTIVE, AvailabilityStatus.RESERVED,]
+        },
       },
     });
     return availabilityEntities.map(AvailabilityRepositoryMapper.toDomain);

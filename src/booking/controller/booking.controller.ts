@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { BookingService } from '../service/booking.service';
 import { BookingRequestDto } from './dto/booking-request.dto';
 import { BookingResponseDto } from './dto/booking-response.dto';
@@ -8,18 +8,19 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { Role, Roles } from 'src/auth/roles/role.model';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { CurrentUser } from 'src/auth/roles/user.decorator';
+import { UpdateBookingDto } from './dto/update-booking-request.dto';
 
 class ProcessingRequestDto {
   @IsNumber()
   @IsNotEmpty()
-  amount: number;
+  amount!: number;
 
   @IsString()
   @IsNotEmpty()
   @Matches(/^\d{8}$/, {
     message: 'Debe contener exactamente 8 dígitos numéricos',
   })
-  transactionId: string;
+  transactionId!: string;
 }
 
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -85,5 +86,13 @@ export class BookingController {
   async bookingRejected(@Param('bookingId') bookingId: string): Promise<BookingResponseDto> {
     const bookingReject = await this.bookingService.rejected(Number(bookingId));
     return BookingMapper.toResponse(bookingReject);
+  }
+
+  @Patch(':bookingId')
+  async bookingUpdate(@Param('bookingId') bookingId: string, @Body() updateDto: UpdateBookingDto): Promise<BookingResponseDto> {
+    console.log("booking update: ", updateDto);
+    const model = BookingMapper.toUpdateModel(updateDto);
+    const updatedBooking = await this.bookingService.updateBooking(Number(bookingId), model);
+    return BookingMapper.toResponse(updatedBooking);
   }
 }

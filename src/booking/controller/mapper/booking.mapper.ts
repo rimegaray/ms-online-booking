@@ -7,6 +7,7 @@ import {
   PsychologistInfoDto,
   ServiceInfoDto,
 } from '../dto/booking-response.dto';
+import { UpdateBookingDto } from '../dto/update-booking-request.dto';
 
 @Injectable()
 export class BookingMapper {
@@ -75,5 +76,12 @@ export class BookingMapper {
       description: service.description,
       price: service.price,
     };
+  }
+
+  static toUpdateModel(dto: UpdateBookingDto): Partial<Booking> {
+    return {
+      timeRange: dto.timeRange,
+      notes: dto.notes,
+    }
   }
 }

@@ -3,5 +3,11 @@ export interface Availability {
   psychologistId: number;
   date?: Date | null;
   timeRange: string;
-  isActive?: boolean;
+  isActive?: AvailabilityStatus;
+}
+
+export enum AvailabilityStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  RESERVED = 'RESERVED',
 }
