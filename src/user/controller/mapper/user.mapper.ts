@@ -1,6 +1,7 @@
 import { User } from 'src/user/model/user.model';
 import { UserRequestDto } from '../dto/user-request.dto';
 import { UserResponseDto } from '../dto/user-response.dto';
+import { PatchUserDto } from '../dto/user-patch.dto';
 
 export class UserMapper {
   static toModel(dto: UserRequestDto): User {
@@ -24,6 +25,12 @@ export class UserMapper {
       email: model.email,
       entityId: model.entityId,
       isActive: model.isActive,
+    };
+  }
+
+  static toUpdateModel(dto: PatchUserDto): Partial<User> {
+    return {
+      email: dto.email,
     };
   }
 }

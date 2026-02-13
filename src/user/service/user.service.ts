@@ -47,4 +47,16 @@ export class UserService {
 
     return this.userRepository.create(user);
   }
+
+  async patchUser(userId: number, user: Partial<User>): Promise<User> {
+    const getUser = this.userRepository.findById(userId);
+    if (!getUser) {
+      throw new NotFoundException('Usuario no encontrado!');
+    }
+    if (user.password) {
+      user.password = await bcrypt.hash(user.password, 12);
+    }
+
+    return this.userRepository.patch(userId, user);
+  }
 }

@@ -17,11 +17,11 @@ export class UserRequestDto {
   @IsOptional()
   profile!: UserProfile;
 
-  @IsNotEmpty({ message: 'El email es obligatorio' })
+  @IsOptional()
   @IsEmail({}, { 
     message: 'El email $value no es válido' 
   })
-  email!: string;
+  email?: string;
 
   @IsInt({ message: 'entityId: debe ser un número entero' })
   @IsPositive({ message: 'entityId: debe ser positivo' })

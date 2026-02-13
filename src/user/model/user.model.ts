@@ -3,7 +3,7 @@ export interface User {
   username: string;
   password: string;
   profile?: string;
-  email: string;
+  email?: string;
   entityId: number;
   isActive: boolean;
 }

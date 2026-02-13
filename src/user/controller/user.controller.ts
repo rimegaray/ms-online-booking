@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UserRequestDto } from './dto/user-request.dto';
 import { UserMapper } from './mapper/user.mapper';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { PatchUserDto } from './dto/user-patch.dto';
 
 @Controller('/user')
 export class UserController {
@@ -59,5 +60,13 @@ export class UserController {
   @Delete(':userId')
   async deleteUser(@Param('userId') userId: string): Promise<void> {
     return this.userService.deleteUser(Number(userId));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':userId')
+  async patchUser(@Param('userId') userId: string, @Body() userRequest: PatchUserDto): Promise<UserResponseDto> {
+    const model = UserMapper.toUpdateModel(userRequest);
+    const user = await this.userService.patchUser(Number(userId), model);
+    return UserMapper.toResponse(user);
   }
 }

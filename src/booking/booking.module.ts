@@ -4,8 +4,10 @@ import { BookingService } from './service/booking.service';
 import { BookingRepository } from './repository/booking.repository';
 import { PrismaService } from 'src/common/service/prisma.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { AvailabilityModule } from 'src/availability/availability.module';
 
 @Module({
+  imports: [AvailabilityModule],
   controllers: [BookingController],
   providers: [BookingService, BookingRepository, PrismaService, JwtAuthGuard]
 })

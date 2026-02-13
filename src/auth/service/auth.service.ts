@@ -82,7 +82,7 @@ export class AuthService {
       httpOnly: true,
       secure: false, //(cambiar a true en en producción)
       sameSite: 'lax', //TODO: 'strict' en producción
-      maxAge: 10 * 60 * 1000,
+      maxAge: 120 * 60 * 1000,
       path: '/',
     });
   }
@@ -96,7 +96,7 @@ export class AuthService {
       httpOnly: true,
       secure: false, //(cambiar a true en en producción)
       sameSite: 'lax',
-      maxAge: 120 * 60 * 1000,
+      maxAge: 121 * 60 * 1000,
       path: '/',
     });
   }

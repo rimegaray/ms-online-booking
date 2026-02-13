@@ -65,4 +65,16 @@ export class UserRepository {
       where: { user_id: userId },
     });
   }
+
+  async patch(userId: number, user: Partial<User>): Promise<User> {
+    const data: Partial<User> = {};
+     if(user.email !== undefined) data.email = user.email;
+
+     const updated = await this.prisma.user.update({
+      where: { user_id: userId },
+      data,
+     });
+
+     return RepositoryMapper.toDomain(updated);
+  }
 }

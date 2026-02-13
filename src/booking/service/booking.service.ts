@@ -13,11 +13,13 @@ import { BookingRepository } from '../repository/booking.repository';
 import { randomUUID } from 'crypto';
 import { AuthUser } from 'src/auth/jwt/jwt.guard';
 import { Role } from 'src/auth/roles/role.model';
+import { AvailabilityService } from 'src/availability/service/availability.service';
 
 @Injectable()
 export class BookingService {
   constructor(
     private readonly bookingRepository: BookingRepository,
+    private readonly availabilityService: AvailabilityService,
   ) {}
 
   createBooking(booking: Booking): Promise<Booking> {
