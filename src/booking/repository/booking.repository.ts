@@ -129,6 +129,7 @@ export class BookingRepository {
       data: {
         time_range: booking.timeRange,
         notes: booking.notes,
+        booking_date: booking.bookingDate,
       },
     })
 

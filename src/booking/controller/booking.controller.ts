@@ -90,6 +90,7 @@ export class BookingController {
 
   @Patch(':bookingId')
   async bookingUpdate(@Param('bookingId') bookingId: string, @Body() updateDto: UpdateBookingDto): Promise<BookingResponseDto> {
+    console.log('booking patch: ', updateDto)
     const model = BookingMapper.toUpdateModel(updateDto);
     const updatedBooking = await this.bookingService.updateBooking(Number(bookingId), model);
     return BookingMapper.toResponse(updatedBooking);

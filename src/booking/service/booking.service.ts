@@ -14,6 +14,7 @@ import { randomUUID } from 'crypto';
 import { AuthUser } from 'src/auth/jwt/jwt.guard';
 import { Role } from 'src/auth/roles/role.model';
 import { AvailabilityService } from 'src/availability/service/availability.service';
+import { Availability, AvailabilityStatus } from 'src/availability/model/availability.model';
 
 @Injectable()
 export class BookingService {
@@ -23,10 +24,6 @@ export class BookingService {
   ) {}
 
   createBooking(booking: Booking): Promise<Booking> {
-    booking = {
-      ...booking,
-      bookingDate: new Date(Date.now())
-    }
     return this.bookingRepository.create(booking);
   }
 
@@ -104,6 +101,15 @@ export class BookingService {
         createdPayment.paymentId,
       );
 
+    const availabilityRequest = {
+      psychologistId: updatedBooking.psychologistId,
+      date: updatedBooking.bookingDate,
+      timeRange: updatedBooking.timeRange,
+      isActive: AvailabilityStatus.RESERVED,
+    }
+
+    await this.availabilityService.upsertByDate(availabilityRequest);
+
     return {
       ...updatedBooking,
       paymentId: createdPayment.paymentId,
@@ -134,6 +140,13 @@ export class BookingService {
       BookingState.REJECTED,
     );
 
+    const availabilityRequest = {
+      psychologistId: booking.psychologistId,
+      date: booking.bookingDate,
+      timeRange: booking.timeRange,
+      isActive: AvailabilityStatus.ACTIVE,
+    }
+
     if (!booking.paymentId) {
       throw new BadRequestException('El booking no tiene un payment asociado.');
     }
@@ -142,6 +155,7 @@ export class BookingService {
       booking.paymentId,
       PaymentStatus.REJECTED,
     );
+    await this.availabilityService.upsertByDate(availabilityRequest)
 
     return booking;
   }
