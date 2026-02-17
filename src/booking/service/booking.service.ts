@@ -1,7 +1,9 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   Booking,
@@ -15,6 +17,7 @@ import { AuthUser } from 'src/auth/jwt/jwt.guard';
 import { Role } from 'src/auth/roles/role.model';
 import { AvailabilityService } from 'src/availability/service/availability.service';
 import { Availability, AvailabilityStatus } from 'src/availability/model/availability.model';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class BookingService {
@@ -80,6 +83,30 @@ export class BookingService {
     amount: number,
     transactionId: string,
   ): Promise<Booking> {
+
+    const booking = await this.bookingRepository.findById(bookingId);
+
+    if (!booking) {
+      throw new NotFoundException('Booking no encontrado');
+    }
+
+    const status = await this.availabilityService.getAvailabilityStatus(
+      booking.psychologistId,
+      booking.bookingDate,
+      booking.timeRange,
+    );
+
+    if (status !== AvailabilityStatus.ACTIVE) {
+      throw new BadRequestException('La disponibilidad no está disponible')
+    }
+
+    const availabilityRequest = {
+      psychologistId: booking.psychologistId,
+      date: booking.bookingDate,
+      timeRange: booking.timeRange,
+      isActive: AvailabilityStatus.RESERVED,
+    }
+    
     const paymentUuid = `PAY-${randomUUID()}`;
 
     const payment: Payment = {
@@ -100,13 +127,6 @@ export class BookingService {
         BookingState.PROCESSING,
         createdPayment.paymentId,
       );
-
-    const availabilityRequest = {
-      psychologistId: updatedBooking.psychologistId,
-      date: updatedBooking.bookingDate,
-      timeRange: updatedBooking.timeRange,
-      isActive: AvailabilityStatus.RESERVED,
-    }
 
     await this.availabilityService.upsertByDate(availabilityRequest);
 

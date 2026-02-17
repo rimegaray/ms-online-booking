@@ -42,6 +42,7 @@ export class PatientRequestDto {
   })
   phoneNumber!: string;
 
+  @IsOptional()
   @IsString({ message: 'El nombre del tutor debe ser un texto' })
   @IsNotEmpty({ message: 'El nombre del tutor no puede estar vacío' })
   @Length(0, 255, {
