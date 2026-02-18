@@ -83,6 +83,8 @@ export class BookingMapper {
       timeRange: dto.timeRange,
       notes: dto.notes,
       bookingDate: dto.bookingDate,
+      state: dto.state,
+      statusNote: dto.statusNote,
     }
   }
 }

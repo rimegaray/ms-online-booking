@@ -15,4 +15,10 @@ export class UpdateBookingDto{
     @Type(() => Date)
     @IsDate({ message: 'La fecha de la reserva debe ser una fecha válida' })
     bookingDate?: Date;
+
+    @IsOptional()
+    state?: string;
+
+    @IsOptional()
+    statusNote?: string;
 }

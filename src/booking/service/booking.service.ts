@@ -16,8 +16,7 @@ import { randomUUID } from 'crypto';
 import { AuthUser } from 'src/auth/jwt/jwt.guard';
 import { Role } from 'src/auth/roles/role.model';
 import { AvailabilityService } from 'src/availability/service/availability.service';
-import { Availability, AvailabilityStatus } from 'src/availability/model/availability.model';
-import { Prisma } from '@prisma/client';
+import { AvailabilityStatus } from 'src/availability/model/availability.model';
 
 @Injectable()
 export class BookingService {
@@ -180,7 +179,56 @@ export class BookingService {
     return booking;
   }
 
-  async updateBooking(bookingId: number, booking: Partial<Booking>): Promise<Booking> {
-    return await this.bookingRepository.updateBooking(bookingId, booking);
+  async updateBooking(bookingId: number, booking: Partial<Booking>, user: AuthUser): Promise<Booking> {
+    const getBooking = await this.bookingRepository.findById(bookingId);
+
+    if (!getBooking) {
+      throw new NotFoundException('Booking no encontrado');
+    }
+
+    const status = await this.availabilityService.getAvailabilityStatus(
+      getBooking.psychologistId,
+      getBooking.bookingDate,
+      getBooking.timeRange,
+    );
+
+    if (status !== AvailabilityStatus.ACTIVE) {
+      throw new BadRequestException('La disponibilidad no está disponible')
+    }
+
+    const data: Partial<Booking> = {};
+
+    if(user.role === Role.SECRETARY){
+      data.state = booking.state;
+      data.statusNote = booking.statusNote;
+
+      if(booking.state === BookingState.PROCESSING || booking.state === BookingState.CONFIRMED) {
+        await this.availabilityService.upsertByDate( {
+          psychologistId: getBooking.psychologistId,
+          date: getBooking.bookingDate,
+          timeRange: getBooking.timeRange,
+          isActive: AvailabilityStatus.RESERVED,
+        });
+      }
+    }
+
+    if(user.role === Role.PATIENT){
+      data.timeRange = booking.timeRange;
+      data.bookingDate = booking.bookingDate;
+      data.notes = booking.notes;
+    }
+    
+    return await this.bookingRepository.updateBooking(bookingId, data);
+  }
+
+  async deleteBooking(bookingId: number): Promise<void> {
+    const getBooking = await this.bookingRepository.findById(bookingId);
+    if (!getBooking) {
+      throw new NotFoundException('Reserva no encontrada');
+    }
+    if(getBooking.state !== BookingState.PENDING_PAYMENT){
+      throw new ConflictException('Solo se pueden eliminar reservas en estado PENDING_PAYMENT');
+    }
+    await this.bookingRepository.deleteBooking(bookingId);
   }
 }
