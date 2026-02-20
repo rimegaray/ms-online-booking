@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/service/prisma.service';
 import { AvailabilityStatus, type Availability } from '../model/availability.model';
 import { AvailabilityRepositoryMapper } from './mapper/repository.mapper';
@@ -44,5 +44,27 @@ export class AvailabilityRepository {
       data: entity,
     });
     return AvailabilityRepositoryMapper.toDomain(updatedEntity);
+  }
+
+  async findByPsychologistDateAndTime(psychologistId: number, date:Date, timeRange: string): Promise<Availability | null> {
+
+    const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0,0,0,0);
+
+    const endOfDay = new Date(date);
+    endOfDay.setUTCHours(23,59,59,999);
+
+    const entity  = await this.prisma.availability.findFirst({
+      where: {
+        psychologist_id: psychologistId,
+        time_range: timeRange,
+        date: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+      }
+    });
+
+    return entity  ? AvailabilityRepositoryMapper.toDomain(entity ) : null;
   }
 }

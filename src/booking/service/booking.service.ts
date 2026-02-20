@@ -1,7 +1,9 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   Booking,
@@ -14,6 +16,7 @@ import { randomUUID } from 'crypto';
 import { AuthUser } from 'src/auth/jwt/jwt.guard';
 import { Role } from 'src/auth/roles/role.model';
 import { AvailabilityService } from 'src/availability/service/availability.service';
+import { AvailabilityStatus } from 'src/availability/model/availability.model';
 
 @Injectable()
 export class BookingService {
@@ -23,10 +26,6 @@ export class BookingService {
   ) {}
 
   createBooking(booking: Booking): Promise<Booking> {
-    booking = {
-      ...booking,
-      bookingDate: new Date(Date.now())
-    }
     return this.bookingRepository.create(booking);
   }
 
@@ -83,6 +82,30 @@ export class BookingService {
     amount: number,
     transactionId: string,
   ): Promise<Booking> {
+
+    const booking = await this.bookingRepository.findById(bookingId);
+
+    if (!booking) {
+      throw new NotFoundException('Booking no encontrado');
+    }
+
+    const status = await this.availabilityService.getAvailabilityStatus(
+      booking.psychologistId,
+      booking.bookingDate,
+      booking.timeRange,
+    );
+
+    if (status !== AvailabilityStatus.ACTIVE) {
+      throw new BadRequestException('La disponibilidad no está disponible')
+    }
+
+    const availabilityRequest = {
+      psychologistId: booking.psychologistId,
+      date: booking.bookingDate,
+      timeRange: booking.timeRange,
+      isActive: AvailabilityStatus.RESERVED,
+    }
+    
     const paymentUuid = `PAY-${randomUUID()}`;
 
     const payment: Payment = {
@@ -103,6 +126,8 @@ export class BookingService {
         BookingState.PROCESSING,
         createdPayment.paymentId,
       );
+
+    await this.availabilityService.upsertByDate(availabilityRequest);
 
     return {
       ...updatedBooking,
@@ -134,6 +159,13 @@ export class BookingService {
       BookingState.REJECTED,
     );
 
+    const availabilityRequest = {
+      psychologistId: booking.psychologistId,
+      date: booking.bookingDate,
+      timeRange: booking.timeRange,
+      isActive: AvailabilityStatus.ACTIVE,
+    }
+
     if (!booking.paymentId) {
       throw new BadRequestException('El booking no tiene un payment asociado.');
     }
@@ -142,11 +174,63 @@ export class BookingService {
       booking.paymentId,
       PaymentStatus.REJECTED,
     );
+    await this.availabilityService.upsertByDate(availabilityRequest)
 
     return booking;
   }
 
-  async updateBooking(bookingId: number, booking: Partial<Booking>): Promise<Booking> {
-    return await this.bookingRepository.updateBooking(bookingId, booking);
+  async updateBooking(bookingId: number, booking: Partial<Booking>, user: AuthUser): Promise<Booking> {
+    const getBooking = await this.bookingRepository.findById(bookingId);
+
+    if (!getBooking) {
+      throw new NotFoundException('Booking no encontrado');
+    }
+
+    const data: Partial<Booking> = {};
+
+    if(user.role === Role.SECRETARY){
+      data.state = booking.state;
+      data.statusNote = booking.statusNote;
+
+      const status = await this.availabilityService.getAvailabilityStatus(
+        getBooking.psychologistId,
+        getBooking.bookingDate,
+        getBooking.timeRange,
+      );
+
+      console.log("ESTADO: ", status)
+
+      if (status !== AvailabilityStatus.ACTIVE) {
+        throw new BadRequestException('La disponibilidad no está disponible')
+      }
+
+      if(booking.state === BookingState.PROCESSING || booking.state === BookingState.CONFIRMED) {
+        await this.availabilityService.upsertByDate( {
+          psychologistId: getBooking.psychologistId,
+          date: getBooking.bookingDate,
+          timeRange: getBooking.timeRange,
+          isActive: AvailabilityStatus.RESERVED,
+        });
+      }
+    }
+
+    if(user.role === Role.PATIENT){
+      data.timeRange = booking.timeRange;
+      data.bookingDate = booking.bookingDate;
+      data.notes = booking.notes;
+    }
+
+    return await this.bookingRepository.updateBooking(bookingId, data);
+  }
+
+  async deleteBooking(bookingId: number): Promise<void> {
+    const getBooking = await this.bookingRepository.findById(bookingId);
+    if (!getBooking) {
+      throw new NotFoundException('Reserva no encontrada');
+    }
+    if(getBooking.state !== BookingState.PENDING_PAYMENT){
+      throw new ConflictException('Solo se pueden eliminar reservas en estado PENDING_PAYMENT');
+    }
+    await this.bookingRepository.deleteBooking(bookingId);
   }
 }

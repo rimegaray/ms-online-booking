@@ -5,7 +5,7 @@ export class PatientResponseDto {
   age!: number;
   dni!: string;
   phoneNumber!: string;
-  tutorName!: string;
+  tutorName?: string;
   admissionDate?: Date;
   observations!: string;
   lastSessionDate?: Date;

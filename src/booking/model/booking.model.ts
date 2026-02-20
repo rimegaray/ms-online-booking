@@ -7,6 +7,7 @@ export interface Booking {
   timeRange: string;
   state?: string;
   notes?: string;
+  statusNote?: string;
   paymentId?: number;
   payment?: Payment;
   patient?: PatientInfo;

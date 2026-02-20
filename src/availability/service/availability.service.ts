@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import type { Availability } from '../model/availability.model';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Availability, AvailabilityStatus } from '../model/availability.model';
 import { AvailabilityRepository } from '../repository/availability.repository';
 
 @Injectable()
@@ -57,5 +57,13 @@ export class AvailabilityService {
     return this.availabilityRepository.findInactiveAndReservedByPsychologistId(
       psychologistId,
     );
+  }
+  
+  async getAvailabilityStatus(psychologistId: number,date: Date,timeRange: string): Promise<AvailabilityStatus | undefined> {
+
+    console.log("Parametros de disponibilidad: ", psychologistId, date, timeRange)
+    const availability = await this.availabilityRepository.findByPsychologistDateAndTime(psychologistId,date,timeRange);
+
+    return availability ? availability.isActive : AvailabilityStatus.ACTIVE;
   }
 }

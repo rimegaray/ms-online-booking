@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthRepository } from '../repository/auth.repository';
 import { Auth } from '../model/auth.model';
 import { JwtService } from '@nestjs/jwt';
@@ -58,7 +58,7 @@ export class AuthService {
     const user: User = await this.userService.getUserByUsername(auth.username);
 
     if (!user?.isActive) {
-      throw new UnauthorizedException('Usuario inválido');
+      throw new ForbiddenException('Usuario inactivo');
     }
 
     const validPassword = await bcrypt.compare(auth.password, user.password);

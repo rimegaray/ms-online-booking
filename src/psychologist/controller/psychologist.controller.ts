@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -21,8 +22,8 @@ export class PsychologistController {
   constructor(private readonly psychologistService: PsychologistService) {}
 
   @Get()
-  getPsychologists(): Promise<PsychologistResponseDto[]> {
-    return this.psychologistService.getPsychologists();
+  getPsychologists(@Query('serviceId', new ParseIntPipe({ optional: true })) serviceId?: number): Promise<PsychologistResponseDto[]> {
+    return this.psychologistService.getPsychologists(String(serviceId));
   }
 
   @Get(':psychologistId')

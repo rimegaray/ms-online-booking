@@ -3,13 +3,13 @@ export interface Psychologist {
   name: string;
   lastname: string;
   age: number;
-  specialty: string;
+  specialty?: string;
   phoneNumber: string;
   address?: string;
   dni: string;
   email: string;
-  experience: string;
+  experience?: string;
   admissionDate?: Date;
-  photo: string;
-  isActive: boolean;
+  photo?: string;
+  isActive?: boolean;
 }

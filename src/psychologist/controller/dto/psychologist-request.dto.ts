@@ -22,15 +22,16 @@ export class PsychologistRequestDto {
   lastname!: string;
 
   @IsInt()
-  @Min(1)
-  @Max(99)
+  @IsInt({ message: 'La edad debe ser un número entero' })
+  @Min(1, { message: 'La edad mínima es 1 año' })
+  @Max(99, { message: 'La edad máxima es 99 años' })
   age!: number;
 
   @IsString()
-  @IsNotEmpty()
-  specialty!: string;
+  @IsOptional()
+  specialty?: string;
 
-  @Matches(/^9\d{8}$/)
+  @Matches(/^9\d{8}$/, {message: 'El número de teléfono debe tener 9 digitos'})
   phoneNumber!: string;
 
   @IsOptional()
@@ -45,15 +46,16 @@ export class PsychologistRequestDto {
   email!: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @Length(0, 255)
-  experience!: string;
+  experience?: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @Length(0, 255)
-  photo!: string;
+  photo?: string;
 
   @IsBoolean()
-  isActive!: boolean;
+  @IsOptional()
+  isActive?: boolean;
 }

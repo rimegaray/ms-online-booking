@@ -12,7 +12,7 @@ export class PatientMapper {
       age: patientRequestDto.age,
       dni: patientRequestDto.dni,
       phoneNumber: patientRequestDto.phoneNumber,
-      tutorName: patientRequestDto.tutorName.trim(),
+      tutorName: patientRequestDto.tutorName,
       observations: patientRequestDto.observations?.trim() ?? '',
       lastSessionDate: patientRequestDto.lastSessionDate,
       signedConsent: patientRequestDto.signedConsent
