@@ -186,21 +186,23 @@ export class BookingService {
       throw new NotFoundException('Booking no encontrado');
     }
 
-    const status = await this.availabilityService.getAvailabilityStatus(
-      getBooking.psychologistId,
-      getBooking.bookingDate,
-      getBooking.timeRange,
-    );
-
-    if (status !== AvailabilityStatus.ACTIVE) {
-      throw new BadRequestException('La disponibilidad no está disponible')
-    }
-
     const data: Partial<Booking> = {};
 
     if(user.role === Role.SECRETARY){
       data.state = booking.state;
       data.statusNote = booking.statusNote;
+
+      const status = await this.availabilityService.getAvailabilityStatus(
+        getBooking.psychologistId,
+        getBooking.bookingDate,
+        getBooking.timeRange,
+      );
+
+      console.log("ESTADO: ", status)
+
+      if (status !== AvailabilityStatus.ACTIVE) {
+        throw new BadRequestException('La disponibilidad no está disponible')
+      }
 
       if(booking.state === BookingState.PROCESSING || booking.state === BookingState.CONFIRMED) {
         await this.availabilityService.upsertByDate( {
@@ -217,7 +219,7 @@ export class BookingService {
       data.bookingDate = booking.bookingDate;
       data.notes = booking.notes;
     }
-    
+
     return await this.bookingRepository.updateBooking(bookingId, data);
   }
 

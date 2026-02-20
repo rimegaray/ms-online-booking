@@ -28,6 +28,7 @@ export class BookingRepository {
     const found = await this.prisma.booking.findUnique({
       where: { booking_id: id },
       include: {
+        payment: true,
         patient: true,
         psychologist: true,
         service: true,
@@ -64,6 +65,7 @@ export class BookingRepository {
     const list = await this.prisma.booking.findMany({
       where,
       include: {
+        payment: true,
         patient: true,
         psychologist: true,
         service: true,

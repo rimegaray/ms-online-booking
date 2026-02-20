@@ -4,6 +4,7 @@ import { BookingRequestDto } from '../dto/booking-request.dto';
 import {
   BookingResponseDto,
   PatientInfoDto,
+  PaymentInfoDto,
   PsychologistInfoDto,
   ServiceInfoDto,
 } from '../dto/booking-response.dto';
@@ -42,6 +43,9 @@ export class BookingMapper {
       service: booking.service
         ? this.toServiceInfoDto(booking.service)
         : undefined,
+      payment: booking.payment
+        ? this.toPaymentInfoDto(booking.payment)
+        :undefined,
     };
   }
 
@@ -75,6 +79,14 @@ export class BookingMapper {
       name: service.name,
       description: service.description,
       price: service.price,
+    };
+  }
+
+  static toPaymentInfoDto(payment: Booking['payment']): PaymentInfoDto {
+    if(!payment) return undefined as any;
+    return {
+      transactionId: payment.transactionId,
+      amount: payment.amount,
     };
   }
 
