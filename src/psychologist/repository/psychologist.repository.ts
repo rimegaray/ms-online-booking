@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/service/prisma.service';
 import { Psychologist } from '../model/psychologist.model';
 import { RepositoryMapper } from './mapper/repository.mapper';
+import { UserProfile } from 'src/user/model/user.model';
 
 @Injectable()
 export class PsychologistRepository {
@@ -35,7 +36,41 @@ export class PsychologistRepository {
   }
 
   async findAll(): Promise<Psychologist[]> {
-    const list = await this.prisma.psychologist.findMany();
+    const users = await this.prisma.user.findMany({
+      where: { profile: UserProfile.PSYCHOLOGIST },
+      select: { entity_id: true }
+    });
+
+    const psychologistIds = users.map(u => u.entity_id);
+
+    const list = await this.prisma.psychologist.findMany({
+      where: {
+        psychologist_id: {in: psychologistIds}
+      }
+    });
+    return list.map((psychologist) => RepositoryMapper.toDomain(psychologist));
+  }
+
+  async findBySpecialty(specialty?: number): Promise<Psychologist[]> {
+
+    const users = await this.prisma.user.findMany({
+      where: { profile: UserProfile.PSYCHOLOGIST },
+      select: { entity_id: true }
+    });
+
+    const psychologistIds = users.map(u => u.entity_id);
+
+    if(psychologistIds.length === 0) return [];
+
+    const list = await this.prisma.psychologist.findMany({
+      where: {
+        psychologist_id: { in: psychologistIds },
+        specialty: {
+          contains: specialty!.toString()
+        }
+      }
+    });
+
     return list.map((psychologist) => RepositoryMapper.toDomain(psychologist));
   }
 

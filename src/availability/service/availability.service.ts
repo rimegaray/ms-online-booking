@@ -9,6 +9,7 @@ export class AvailabilityService {
   ) {}
 
   async upsertByDate(availability: Availability): Promise<Availability> {
+    console.log("Disponibilidad request en services: ", availability)
     const existingAvailabilities =
       await this.availabilityRepository.findByPsychologistId(
         availability.psychologistId,

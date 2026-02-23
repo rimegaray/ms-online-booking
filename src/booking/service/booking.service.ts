@@ -96,7 +96,7 @@ export class BookingService {
     );
 
     if (status !== AvailabilityStatus.ACTIVE) {
-      throw new BadRequestException('La disponibilidad no está disponible')
+      throw new BadRequestException('Hora ya reservada')
     }
 
     const availabilityRequest = {
@@ -180,6 +180,7 @@ export class BookingService {
   }
 
   async updateBooking(bookingId: number, booking: Partial<Booking>, user: AuthUser): Promise<Booking> {
+    console.log("Booking request en service: ", booking)
     const getBooking = await this.bookingRepository.findById(bookingId);
 
     if (!getBooking) {
@@ -187,29 +188,33 @@ export class BookingService {
     }
 
     const data: Partial<Booking> = {};
+    const newDate= booking.bookingDate ?? getBooking.bookingDate;
+    const newTimeRange = booking.timeRange ?? getBooking.timeRange;
 
     if(user.role === Role.SECRETARY){
+      data.timeRange = booking.timeRange;
       data.state = booking.state;
       data.statusNote = booking.statusNote;
+      data.bookingDate = booking.bookingDate;
 
       const status = await this.availabilityService.getAvailabilityStatus(
         getBooking.psychologistId,
-        getBooking.bookingDate,
-        getBooking.timeRange,
+        newDate,
+        newTimeRange,
       );
 
-      console.log("ESTADO: ", status)
+      console.log("ESTADO: ", status);
 
       if (status !== AvailabilityStatus.ACTIVE) {
-        throw new BadRequestException('La disponibilidad no está disponible')
+        throw new BadRequestException('Hora ya reservada')
       }
 
       if(booking.state === BookingState.PROCESSING || booking.state === BookingState.CONFIRMED) {
         await this.availabilityService.upsertByDate( {
           psychologistId: getBooking.psychologistId,
-          date: getBooking.bookingDate,
-          timeRange: getBooking.timeRange,
-          isActive: AvailabilityStatus.RESERVED,
+          date: newDate,
+          timeRange: newTimeRange,
+          isActive: AvailabilityStatus.RESERVED
         });
       }
     }

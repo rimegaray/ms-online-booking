@@ -5,14 +5,17 @@ import { PsychologistRepository } from '../repository/psychologist.repository';
 @Injectable()
 export class PsychologistService {
   
-  DEFAULT_IMAGE: string = "https://res.cloudinary.com/dn4emn45q/image/upload/v1770401779/predeterminado_ktff67.png";
+  DEFAULT_IMAGE: string = "https://res.cloudinary.com/dn4emn45q/image/upload/v1771878733/1771878455474_pkskcm.png";
 
   constructor(
     private readonly psychologistRepository: PsychologistRepository,
   ) {}
 
-  getPsychologists(serviceId?: string): Promise<Psychologist[]> {
-    return this.psychologistRepository.findAll();
+  getPsychologists(specialty?: number): Promise<Psychologist[]> {
+    if(!specialty){
+      return this.psychologistRepository.findAll();
+    }
+    return this.psychologistRepository.findBySpecialty(specialty);
   }
 
   getPsychologistsById(psychologistId: number): Promise<Psychologist> {

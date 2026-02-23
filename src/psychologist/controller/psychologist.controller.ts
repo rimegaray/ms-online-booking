@@ -23,7 +23,7 @@ export class PsychologistController {
 
   @Get()
   getPsychologists(@Query('serviceId', new ParseIntPipe({ optional: true })) serviceId?: number): Promise<PsychologistResponseDto[]> {
-    return this.psychologistService.getPsychologists(String(serviceId));
+    return this.psychologistService.getPsychologists(serviceId);
   }
 
   @Get(':psychologistId')

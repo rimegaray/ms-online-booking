@@ -127,7 +127,7 @@ export class BookingRepository {
   }
 
   async updateBooking(bookingId: number, booking: Partial<Booking>): Promise<Booking> {
-
+    console.log("booking request update en repository: ",booking)
     const data: any = {};
 
     if (booking.timeRange !== undefined) {
