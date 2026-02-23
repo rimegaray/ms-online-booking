@@ -17,6 +17,7 @@ export class BookingRepository {
         time_range: booking.timeRange,
         state: BookingState.PENDING_PAYMENT,
         notes: booking.notes,
+        status_note: booking.statusNote,
       },
     });
 
@@ -27,6 +28,7 @@ export class BookingRepository {
     const found = await this.prisma.booking.findUnique({
       where: { booking_id: id },
       include: {
+        payment: true,
         patient: true,
         psychologist: true,
         service: true,
@@ -63,6 +65,7 @@ export class BookingRepository {
     const list = await this.prisma.booking.findMany({
       where,
       include: {
+        payment: true,
         patient: true,
         psychologist: true,
         service: true,
@@ -124,14 +127,40 @@ export class BookingRepository {
   }
 
   async updateBooking(bookingId: number, booking: Partial<Booking>): Promise<Booking> {
+
+    const data: any = {};
+
+    if (booking.timeRange !== undefined) {
+      data.time_range = booking.timeRange;
+    }
+
+    if (booking.notes !== undefined) {
+      data.notes = booking.notes;
+    }
+
+    if (booking.bookingDate !== undefined) {
+      data.booking_date = booking.bookingDate;
+    }
+
+    if (booking.state !== undefined) {
+      data.state = booking.state; 
+    }
+
+    if (booking.statusNote !== undefined) {
+      data.status_note = booking.statusNote;
+    }
+
     const updatedBooking = await this.prisma.booking.update({
       where: { booking_id: bookingId},
-      data: {
-        time_range: booking.timeRange,
-        notes: booking.notes,
-      },
+      data,
     })
 
     return RepositoryMapper.toDomain(updatedBooking); 
+  }
+
+  async deleteBooking(bookingId: number): Promise<void> {
+    await this.prisma.booking.delete({
+      where: {booking_id: bookingId},
+    })
   }
 }

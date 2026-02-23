@@ -3,6 +3,7 @@ import { PrismaService } from 'src/common/service/prisma.service';
 import { User } from '../model/user.model';
 import { RepositoryMapper } from './mapper/repository.mapper';
 import * as bcrypt from 'bcrypt';
+import { promises } from 'dns';
 
 @Injectable()
 export class UserRepository {

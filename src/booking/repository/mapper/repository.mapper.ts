@@ -13,6 +13,7 @@ export class RepositoryMapper {
       timeRange: prismaBooking.time_range,
       state: prismaBooking.state ?? undefined,
       notes: prismaBooking.notes ?? undefined,
+      statusNote: prismaBooking.status_note ?? undefined,
       paymentId: prismaBooking.payment_id ?? undefined,
       payment: prismaBooking.payment
         ? {

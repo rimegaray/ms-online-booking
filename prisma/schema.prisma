@@ -25,6 +25,7 @@ model booking {
   state           String?  @db.VarChar(255)
   notes           String?  @db.Text
   payment_id      Int?     @unique
+  status_note     String?  @db.VarChar(255)
 
   patient      patient      @relation(fields: [patient_id], references: [patient_id])
   psychologist psychologist @relation(fields: [psychologist_id], references: [psychologist_id])
@@ -69,8 +70,8 @@ model psychologist {
   name            String    @db.VarChar(255)
   lastname        String    @db.VarChar(255)
   age             Int
-  specialty       String    @db.VarChar(255)
-  experience      String    @db.VarChar(255)
+  specialty       String?   @db.VarChar(255)
+  experience      String?   @db.VarChar(255)
   is_active       Boolean   @default(true)
   address         String?   @db.VarChar(255)
   email           String?   @db.VarChar(75)

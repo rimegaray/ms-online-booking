@@ -20,6 +20,11 @@ export class ServiceInfoDto {
   price!: number;
 }
 
+export class PaymentInfoDto {
+  transactionId!: string;
+  amount!: number;
+}
+
 export class BookingResponseDto {
   bookingId!: number;
   patientId!: number;
@@ -29,8 +34,10 @@ export class BookingResponseDto {
   timeRange!: string;
   state!: string;
   notes?: string;
+  statusNote?: string;
   paymentId?: number;
   patient?: PatientInfoDto;
   psychologist?: PsychologistInfoDto;
   service?: ServiceInfoDto;
+  payment?: PaymentInfoDto;
 }

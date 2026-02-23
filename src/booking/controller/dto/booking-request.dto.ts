@@ -29,4 +29,8 @@ export class BookingRequestDto {
   @IsOptional()
   @IsString({ message: 'Las notas deben ser un texto' })
   notes?: string;
+
+  @IsOptional()
+  @IsString({ message: 'La nota de estado debe ser un texto' })
+  statusNote?: string;
 }

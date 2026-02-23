@@ -1,11 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '../repository/user.repository';
 import { User, UserProfile } from '../model/user.model';
 import * as bcrypt from 'bcrypt';
+import { EmailService } from 'src/mail/service/email.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly emailService: EmailService,
+  ) {}
 
   getUsers(): Promise<User[]> {
     return this.userRepository.findAll();
@@ -39,13 +44,24 @@ export class UserService {
     return this.userRepository.delete(userId);
   }
 
-  createUserPatient(user: User): Promise<User> {
-    user = {
-      ...user,
-      profile: UserProfile.PATIENT,
-    };
+  async createUserPatient(user: User): Promise<User> {
 
-    return this.userRepository.create(user);
+    try {
+      user.profile= UserProfile.PATIENT;
+       const createdUserPatient = await this.userRepository.create(user);
+
+      if(createdUserPatient.email){
+        await this.emailService.sendMessage(user.username, user.email)
+        .catch(error => console.error('Error enviando correo: ', error)); 
+      }
+
+      return createdUserPatient;
+    } catch (error) {
+      if((error as any)?.code === 'P2002'){
+        throw new ConflictException('El usuario ya existe');
+      }
+      throw error;
+    }
   }
 
   async patchUser(userId: number, user: Partial<User>): Promise<User> {

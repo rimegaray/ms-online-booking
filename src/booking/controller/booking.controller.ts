@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { BookingService } from '../service/booking.service';
 import { BookingRequestDto } from './dto/booking-request.dto';
 import { BookingResponseDto } from './dto/booking-response.dto';
@@ -9,6 +9,7 @@ import { Role, Roles } from 'src/auth/roles/role.model';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { CurrentUser } from 'src/auth/roles/user.decorator';
 import { UpdateBookingDto } from './dto/update-booking-request.dto';
+import { User } from 'src/user/model/user.model';
 
 class ProcessingRequestDto {
   @IsNumber()
@@ -89,9 +90,15 @@ export class BookingController {
   }
 
   @Patch(':bookingId')
-  async bookingUpdate(@Param('bookingId') bookingId: string, @Body() updateDto: UpdateBookingDto): Promise<BookingResponseDto> {
+  async bookingUpdate(@Param('bookingId') bookingId: string, @Body() updateDto: UpdateBookingDto, @CurrentUser() user): Promise<BookingResponseDto> {
     const model = BookingMapper.toUpdateModel(updateDto);
-    const updatedBooking = await this.bookingService.updateBooking(Number(bookingId), model);
+    const updatedBooking = await this.bookingService.updateBooking(Number(bookingId), model, user);
     return BookingMapper.toResponse(updatedBooking);
+  }
+
+  @Delete(':bookingId')
+  @HttpCode(204)
+  async bookingDelete(@Param('bookingId') bookingId: string): Promise<void> {
+    await this.bookingService.deleteBooking(Number(bookingId));
   }
 }
