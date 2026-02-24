@@ -20,7 +20,7 @@ model booking {
   patient_id      Int
   psychologist_id Int
   service_id      Int
-  booking_date    DateTime @db.DateTime(0)
+  booking_date    DateTime @db.Date
   time_range      String   @db.VarChar(20)
   state           String?  @db.VarChar(255)
   notes           String?  @db.Text
