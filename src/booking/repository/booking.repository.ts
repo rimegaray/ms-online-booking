@@ -19,6 +19,12 @@ export class BookingRepository {
         notes: booking.notes,
         status_note: booking.statusNote,
       },
+      include: {
+        payment: true,
+        patient: true,
+        psychologist: true,
+        service: true,
+      }
     });
 
     return RepositoryMapper.toDomain(created);
@@ -86,6 +92,12 @@ export class BookingRepository {
     const updated = await this.prisma.booking.update({
       where: { booking_id: bookingId },
       data: { state, payment_id: paymentId },
+      include: {
+        payment: true,
+        patient: true,
+        psychologist: true,
+        service: true,
+      }
     });
     return RepositoryMapper.toDomain(updated);
   }
@@ -108,7 +120,13 @@ export class BookingRepository {
   async updateStateBooking(bookingId: number, state: BookingState): Promise<Booking>{
     const stateUpdate = await this.prisma.booking.update({
       where: { booking_id: bookingId},
-      data: { state }
+      data: { state },
+      include: {
+        payment: true,
+        patient: true,
+        psychologist: true,
+        service: true,
+      }
     })
 
     return RepositoryMapper.toDomain(stateUpdate);
