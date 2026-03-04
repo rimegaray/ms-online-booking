@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PatientRepository } from '../repository/patient.repository';
 import { Patient } from '../model/patient.model';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PatientService {
@@ -14,8 +15,8 @@ export class PatientService {
     return this.patientRepository.findById(patientId);
   }
 
-  createPatient(patient: Patient): Promise<Patient> {
-    return this.patientRepository.create(patient);
+  createPatient(patient: Patient, tx?: Prisma.TransactionClient): Promise<Patient> {
+    return this.patientRepository.create(patient, tx);
   }
 
   updatePatient(patient: Patient): Promise<Patient> {

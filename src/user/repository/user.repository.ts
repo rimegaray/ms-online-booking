@@ -3,7 +3,7 @@ import { PrismaService } from 'src/common/service/prisma.service';
 import { User } from '../model/user.model';
 import { RepositoryMapper } from './mapper/repository.mapper';
 import * as bcrypt from 'bcrypt';
-import { promises } from 'dns';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserRepository {
@@ -13,6 +13,8 @@ export class UserRepository {
     const found = await this.prisma.user.findUnique({
       where: { username: username },
     });
+
+    if(!found) return null;
 
     return RepositoryMapper.toDomain(found);
   }
@@ -29,9 +31,11 @@ export class UserRepository {
     return RepositoryMapper.toDomain(found);
   }
 
-  async create(user: User): Promise<User> {
+  async create(user: User, tx?: Prisma.TransactionClient): Promise<User> {
+
+    const prismaClient = tx ?? this.prisma;
     const passwordEncryp = await bcrypt.hash(user.password, 12);
-    const created = await this.prisma.user.create({
+    const created = await prismaClient.user.create({
       data: {
         username: user.username,
         password: passwordEncryp,

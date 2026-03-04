@@ -5,6 +5,7 @@ import { UserRequestDto } from './dto/user-request.dto';
 import { UserMapper } from './mapper/user.mapper';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { PatchUserDto } from './dto/user-patch.dto';
+import { RegisterPatientRequestDto, RegisterPatientResponseDto } from './dto/register-patient.dto';
 
 @Controller('/user')
 export class UserController {
@@ -22,14 +23,14 @@ export class UserController {
     return this.userService.getUserById(Number(userId));
   }
 
-  @Post('patient')
+  /*@Post('patient')
   async postUserPatient(
     @Body() userRequestDto: UserRequestDto,
   ): Promise<UserResponseDto> {
     const model = UserMapper.toModel(userRequestDto);
     const newUser = await this.userService.createUserPatient(model);
     return UserMapper.toResponse(newUser);
-  }
+  }*/
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -68,5 +69,22 @@ export class UserController {
     const model = UserMapper.toUpdateModel(userRequest);
     const user = await this.userService.patchUser(Number(userId), model);
     return UserMapper.toResponse(user);
+  }
+
+  @Post('patient')
+  async registerPatient(@Body() dto: RegisterPatientRequestDto): Promise<RegisterPatientResponseDto> {
+    const patientModel = UserMapper.toPatientModel(dto);
+    const userModel = UserMapper.toUserModel(dto);
+
+    const result = await this.userService.registerPatient(patientModel, userModel);
+    
+    return UserMapper.toResponsePatient(result);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('exist/:username')
+  async usernameExist(@Param('username') username: string) {
+    const exist = await this.userService.userNameExist(username);
+    return {available: !exist};
   }
 }

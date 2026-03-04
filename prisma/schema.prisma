@@ -20,7 +20,7 @@ model booking {
   patient_id      Int
   psychologist_id Int
   service_id      Int
-  booking_date    DateTime @db.DateTime(0)
+  booking_date    DateTime @db.Date
   time_range      String   @db.VarChar(20)
   state           String?  @db.VarChar(255)
   notes           String?  @db.Text
@@ -74,7 +74,6 @@ model psychologist {
   experience      String?   @db.VarChar(255)
   is_active       Boolean   @default(true)
   address         String?   @db.VarChar(255)
-  email           String?   @db.VarChar(75)
   dni             String?   @db.VarChar(8)
   phone_number    String?   @db.VarChar(255)
   admission_date  DateTime? @default(now()) @db.DateTime(0)
@@ -100,7 +99,7 @@ model session {
   description  String    @db.VarChar(255)
   booking_id   Int
   patient_id   Int
-  session_date DateTime? @db.DateTime(6)
+  session_date DateTime? @db.Date
 }
 
 model user {

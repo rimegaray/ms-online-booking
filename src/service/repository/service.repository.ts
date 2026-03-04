@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/service/prisma.service';
 import { Service } from '../model/service.model';
 import { RepositoryMapper } from './mapper/repository.mapper';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ServiceRepository {
@@ -21,8 +22,11 @@ export class ServiceRepository {
     return RepositoryMapper.toDomain(created);
   }
 
-  async findAll(): Promise<Service[]> {
-    const lists = await this.prismaService.service.findMany();
+  async findAll(where?: Prisma.serviceWhereInput): Promise<Service[]> {
+    const lists = await this.prismaService.service.findMany({
+        where
+    });
+    
     return lists.map((services) => RepositoryMapper.toDomain(services));
   }
 

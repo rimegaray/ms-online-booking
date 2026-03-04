@@ -7,7 +7,7 @@ export class PatientResponseDto {
   phoneNumber!: string;
   tutorName?: string;
   admissionDate?: Date;
-  observations!: string;
+  observations?: string;
   lastSessionDate?: Date;
   signedConsent!: string | null;
 }

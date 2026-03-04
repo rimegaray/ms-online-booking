@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/service/prisma.service';
 import { Patient } from '../model/patient.model';
 import { RepositoryMapper } from './mapper/repository.mapper';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PatientRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(patient: Patient): Promise<Patient> {
-    const created = await this.prisma.patient.create({
+  async create(patient: Patient, tx?: Prisma.TransactionClient): Promise<Patient> {
+    
+    const prismaClient = tx ?? this.prisma;
+    
+    const created = await prismaClient.patient.create({
       data: {
         name: patient.name,
         lastname: patient.lastname,
@@ -16,7 +20,6 @@ export class PatientRepository {
         dni: patient.dni,
         phone_number: patient.phoneNumber,
         tutor_name: patient.tutorName,
-        //admission_date: patient.admissionDate,
         observations: patient.observations,
         last_session_date: patient.lastSessionDate,
         signed_consent: patient.signedConsent

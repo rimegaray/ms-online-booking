@@ -14,7 +14,6 @@ export class RepositoryMapper {
       admissionDate: prismaPsychologist.admission_date,
       address: prismaPsychologist.address ?? undefined,
       dni: prismaPsychologist.dni,
-      email: prismaPsychologist.email,
       experience: prismaPsychologist.experience,
       photo: prismaPsychologist.photo,
       isActive: prismaPsychologist.is_active,
