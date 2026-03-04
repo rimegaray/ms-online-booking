@@ -5,7 +5,7 @@ export interface User {
   profile?: string;
   email?: string;
   entityId: number;
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 export enum UserProfile {

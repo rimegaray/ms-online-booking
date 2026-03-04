@@ -4,12 +4,17 @@ import { User, UserProfile } from '../model/user.model';
 import * as bcrypt from 'bcrypt';
 import { EmailService } from 'src/mail/service/email.service';
 import { Prisma } from '@prisma/client';
+import { Patient } from 'src/patient/model/patient.model';
+import { PrismaService } from 'src/common/service/prisma.service';
+import { PatientService } from 'src/patient/service/patient.service';
 
 @Injectable()
 export class UserService {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly userRepository: UserRepository,
     private readonly emailService: EmailService,
+    private readonly patientService: PatientService,
   ) {}
 
   getUsers(): Promise<User[]> {
@@ -20,11 +25,24 @@ export class UserService {
     return this.userRepository.findById(userId);
   }
 
-  getUserByUsername(username: string): Promise<User> {
-    return this.userRepository.findByUsername(username);
+  async getUserByUsername(username: string): Promise<User> {
+    const user = await this.userRepository.findByUsername(username);
+    if(!user) {
+      throw new NotFoundException('Usuario no encontrado')
+    }
+    return user;
   }
 
-  createUser(user: User): Promise<User> {
+  async userNameExist(username: string): Promise<boolean> {
+    const user = await this.userRepository.findByUsername(username);
+    return !!user;
+  }
+
+  async createUser(user: User): Promise<User> {
+    const exist = await this.userNameExist(user.username);
+    if(exist) {
+      throw new ConflictException('Usuario ya existe');
+    }
     return this.userRepository.create(user);
   }
 
@@ -44,17 +62,11 @@ export class UserService {
     return this.userRepository.delete(userId);
   }
 
-  async createUserPatient(user: User): Promise<User> {
+  async createUserPatient(user: User, tx?: Prisma.TransactionClient): Promise<User> {
 
     try {
       user.profile= UserProfile.PATIENT;
-       const createdUserPatient = await this.userRepository.create(user);
-
-      if(createdUserPatient.email){
-        await this.emailService.sendMessage(user.username, user.email)
-        .catch(error => console.error('Error enviando correo: ', error)); 
-      }
-
+      const createdUserPatient = await this.userRepository.create(user, tx);
       return createdUserPatient;
     } catch (error) {
       if((error as any)?.code === 'P2002'){
@@ -74,5 +86,28 @@ export class UserService {
     }
 
     return this.userRepository.patch(userId, user);
+  }
+
+  async registerPatient(patientDto: Patient, userDto: User) {
+    const result = await this.prisma.$transaction(async (tx) => {
+      const patient = await this.patientService.createPatient(patientDto, tx);
+
+      const user = await this.createUserPatient(
+        {
+          ...userDto,
+          entityId: patient.patientId,
+        },
+        tx,
+      );
+
+      return {patient, user}
+    });
+
+    if(result.user.email){
+        await this.emailService.sendMessage(result.user.username, result.user.email)
+        .catch(error => console.error('Error enviando correo: ', error)); 
+    }
+      
+    return result;
   }
 }

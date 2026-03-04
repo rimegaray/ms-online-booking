@@ -9,7 +9,6 @@ export class AvailabilityService {
   ) {}
 
   async upsertByDate(availability: Availability): Promise<Availability> {
-    console.log("Disponibilidad request en services: ", availability)
     const existingAvailabilities =
       await this.availabilityRepository.findByPsychologistId(
         availability.psychologistId,
@@ -61,8 +60,6 @@ export class AvailabilityService {
   }
   
   async getAvailabilityStatus(psychologistId: number,date: Date,timeRange: string): Promise<AvailabilityStatus | undefined> {
-
-    console.log("Parametros de disponibilidad: ", psychologistId, date, timeRange)
     const availability = await this.availabilityRepository.findByPsychologistDateAndTime(psychologistId,date,timeRange);
 
     return availability ? availability.isActive : AvailabilityStatus.ACTIVE;

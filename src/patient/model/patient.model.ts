@@ -7,7 +7,7 @@ export interface Patient {
   phoneNumber: string;
   tutorName?: string;
   admissionDate?: Date;
-  observations: string;
+  observations?: string;
   lastSessionDate?: Date;
-  signedConsent: Uint8Array | null;
+  signedConsent?: Uint8Array | null;
 }

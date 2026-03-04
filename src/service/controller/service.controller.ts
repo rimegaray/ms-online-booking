@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ServiceService } from '../service/service.service';
@@ -13,6 +14,8 @@ import { ServiceRequestDto } from './dto/service-request.dto';
 import { ServiceResponseDto } from './dto/service-response.dto';
 import { ServiceMapper } from './mapper/service.mapper';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { Role, Roles } from 'src/auth/roles/role.model';
+import { CurrentUser } from 'src/auth/roles/user.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('/service')
@@ -28,9 +31,12 @@ export class ServiceController {
     return ServiceMapper.toResponse(service);
   }
 
+  @Roles(Role.PATIENT, Role.PSYCHOLOGIST, Role.SECRETARY)
   @Get()
-  getAll(): Promise<ServiceResponseDto[]> {
-    return this.serviceService.findService();
+  getAll(
+    @CurrentUser() user,
+  ): Promise<ServiceResponseDto[]> {
+    return this.serviceService.findService(user);
   }
 
   @Get(':serviceId')

@@ -15,15 +15,18 @@ import { PsychologistResponseDto } from './dto/psychologist-response.dto';
 import { PsychologistRequestDto } from './dto/psychologist-request.dto';
 import { PsychologistMapper } from './mapper/psychologist.mapper';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { Role, Roles } from 'src/auth/roles/role.model';
+import { CurrentUser } from 'src/auth/roles/user.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('/psychologist')
 export class PsychologistController {
   constructor(private readonly psychologistService: PsychologistService) {}
 
+  @Roles(Role.SECRETARY, Role.PSYCHOLOGIST, Role.PATIENT)
   @Get()
-  getPsychologists(@Query('serviceId', new ParseIntPipe({ optional: true })) serviceId?: number): Promise<PsychologistResponseDto[]> {
-    return this.psychologistService.getPsychologists(serviceId);
+  getPsychologists(@CurrentUser() user, @Query('serviceId', new ParseIntPipe({ optional: true })) serviceId?: number): Promise<PsychologistResponseDto[]> {
+    return this.psychologistService.getPsychologists(user ,serviceId);
   }
 
   @Get(':psychologistId')

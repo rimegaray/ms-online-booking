@@ -180,7 +180,6 @@ export class BookingService {
   }
 
   async updateBooking(bookingId: number, booking: Partial<Booking>, user: AuthUser): Promise<Booking> {
-    console.log("Booking request en service: ", booking)
     const getBooking = await this.bookingRepository.findById(bookingId);
 
     if (!getBooking) {
@@ -202,8 +201,6 @@ export class BookingService {
         newDate,
         newTimeRange,
       );
-
-      console.log("ESTADO: ", status);
 
       if (status !== AvailabilityStatus.ACTIVE) {
         throw new BadRequestException('Hora ya reservada')

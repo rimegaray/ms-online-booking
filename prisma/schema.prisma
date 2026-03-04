@@ -74,7 +74,6 @@ model psychologist {
   experience      String?   @db.VarChar(255)
   is_active       Boolean   @default(true)
   address         String?   @db.VarChar(255)
-  email           String?   @db.VarChar(75)
   dni             String?   @db.VarChar(8)
   phone_number    String?   @db.VarChar(255)
   admission_date  DateTime? @default(now()) @db.DateTime(0)
@@ -100,7 +99,7 @@ model session {
   description  String    @db.VarChar(255)
   booking_id   Int
   patient_id   Int
-  session_date DateTime? @db.DateTime(6)
+  session_date DateTime? @db.Date
 }
 
 model user {

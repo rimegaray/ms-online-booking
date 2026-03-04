@@ -5,5 +5,5 @@ export class UserResponseDto {
   profile?: string;
   email?: string;
   entityId!: number;
-  isActive!: boolean;
+  isActive?: boolean;
 }
