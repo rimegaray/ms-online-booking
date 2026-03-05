@@ -87,6 +87,8 @@ export class BookingMapper {
     return {
       transactionId: payment.transactionId,
       amount: payment.amount,
+      paymentUuid: payment.paymentUuid,
+      createdAt: payment.createdAt
     };
   }
 

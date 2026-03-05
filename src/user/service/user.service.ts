@@ -102,7 +102,6 @@ export class UserService {
 
       return {patient, user}
     });
-
     if(result.user.email){
         await this.emailService.sendMessage(result.user.username, result.user.email)
         .catch(error => console.error('Error enviando correo: ', error)); 
