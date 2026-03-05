@@ -80,8 +80,8 @@ export class AuthService {
 
     res.cookie('access_token', accessToken, {
       httpOnly: true,
-      secure: false, //(cambiar a true en en producción)
-      sameSite: 'lax', //TODO: 'strict' en producción
+      secure: true, //(cambiar a true en en producción)
+      sameSite: 'none', //TODO: 'lax' en dev
       maxAge: 10 * 60 * 1000,
       path: '/',
     });
@@ -94,8 +94,8 @@ export class AuthService {
 
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
-      secure: false, //(cambiar a true en en producción)
-      sameSite: 'lax',
+      secure: true, //(cambiar a true en en producción)
+      sameSite: 'none',
       maxAge: 120 * 60 * 1000,
       path: '/',
     });
