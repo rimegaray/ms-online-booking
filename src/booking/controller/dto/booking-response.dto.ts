@@ -23,6 +23,8 @@ export class ServiceInfoDto {
 export class PaymentInfoDto {
   transactionId!: string;
   amount!: number;
+  paymentUuid!: string;
+  createdAt?: Date;
 }
 
 export class BookingResponseDto {
