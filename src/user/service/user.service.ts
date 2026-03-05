@@ -13,7 +13,7 @@ export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly userRepository: UserRepository,
-    private readonly emailService: EmailService,
+    //private readonly emailService: EmailService,
     private readonly patientService: PatientService,
   ) {}
 
@@ -102,10 +102,10 @@ export class UserService {
 
       return {patient, user}
     });
-    if(result.user.email){
+    /*if(result.user.email){
         await this.emailService.sendMessage(result.user.username, result.user.email)
         .catch(error => console.error('Error enviando correo: ', error)); 
-    }
+    }*/
       
     return result;
   }
