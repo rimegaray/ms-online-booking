@@ -1,4 +1,7 @@
-import { AvailabilityStatus, type Availability } from '../../model/availability.model';
+import {
+  AvailabilityStatus,
+  type Availability,
+} from '../../model/availability.model';
 import type { AvailabilityRequestDto } from '../dto/availability-request.dto';
 import type { AvailabilityResponseDto } from '../dto/availability-response.dto';
 

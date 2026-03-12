@@ -4,7 +4,6 @@ import {
   IsInt,
   IsOptional,
   IsDate,
-  IsISO8601,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -21,7 +20,6 @@ export class BookingRequestDto {
   @IsOptional()
   @Type(() => Date)
   @IsDate({ message: 'La fecha de la reserva debe ser una fecha válida' })
-  //@IsISO8601()
   bookingDate!: Date;
 
   @IsString({ message: 'El rango de tiempo debe ser un texto' })

@@ -15,7 +15,10 @@ export class PatientService {
     return this.patientRepository.findById(patientId);
   }
 
-  createPatient(patient: Patient, tx?: Prisma.TransactionClient): Promise<Patient> {
+  createPatient(
+    patient: Patient,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Patient> {
     return this.patientRepository.create(patient, tx);
   }
 

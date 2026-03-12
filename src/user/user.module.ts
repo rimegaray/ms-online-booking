@@ -10,9 +10,16 @@ import { PatientModule } from 'src/patient/patient.module';
 import { PatientRepository } from 'src/patient/repository/patient.repository';
 
 @Module({
-  imports:[EmailModule, PatientModule],
+  imports: [EmailModule, PatientModule],
   controllers: [UserController],
-  providers: [UserService, UserRepository, PrismaService, JwtAuthGuard, PatientService, PatientRepository],
+  providers: [
+    UserService,
+    UserRepository,
+    PrismaService,
+    JwtAuthGuard,
+    PatientService,
+    PatientRepository,
+  ],
   exports: [UserService],
 })
 export class UserModule {}

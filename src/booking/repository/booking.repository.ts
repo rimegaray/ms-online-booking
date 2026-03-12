@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/service/prisma.service';
-import { Booking, BookingState, Payment, PaymentStatus } from '../model/booking.model';
+import {
+  Booking,
+  BookingState,
+  Payment,
+  PaymentStatus,
+} from '../model/booking.model';
 import { RepositoryMapper } from './mapper/repository.mapper';
 
 @Injectable()
@@ -24,7 +29,7 @@ export class BookingRepository {
         patient: true,
         psychologist: true,
         service: true,
-      }
+      },
     });
 
     return RepositoryMapper.toDomain(created);
@@ -58,14 +63,14 @@ export class BookingRepository {
       where.psychologist_id = psychologistId;
     }
 
-    if(bookingDate) {
+    if (bookingDate) {
       const start = new Date(`${bookingDate}T00:00:00.000Z`);
       const end = new Date(`${bookingDate}T23:59:59.999Z`);
-      
+
       where.booking_date = {
         gte: start,
         lte: end,
-      }
+      };
     }
 
     const list = await this.prisma.booking.findMany({
@@ -78,7 +83,7 @@ export class BookingRepository {
       },
       orderBy: {
         booking_date: 'asc',
-      }
+      },
     });
 
     return list.map((booking) => RepositoryMapper.toDomain(booking));
@@ -97,7 +102,7 @@ export class BookingRepository {
         patient: true,
         psychologist: true,
         service: true,
-      }
+      },
     });
     return RepositoryMapper.toDomain(updated);
   }
@@ -117,34 +122,43 @@ export class BookingRepository {
     return RepositoryMapper.toPaymentDomain(created);
   }
 
-  async updateStateBooking(bookingId: number, state: BookingState): Promise<Booking>{
+  async updateStateBooking(
+    bookingId: number,
+    state: BookingState,
+  ): Promise<Booking> {
     const stateUpdate = await this.prisma.booking.update({
-      where: { booking_id: bookingId},
+      where: { booking_id: bookingId },
       data: { state },
       include: {
         payment: true,
         patient: true,
         psychologist: true,
         service: true,
-      }
-    })
+      },
+    });
 
     return RepositoryMapper.toDomain(stateUpdate);
   }
 
-  async updateStatusPayment(paymentId: number, status: PaymentStatus): Promise<Payment> {
+  async updateStatusPayment(
+    paymentId: number,
+    status: PaymentStatus,
+  ): Promise<Payment> {
     const statusUpdate = await this.prisma.payment.update({
       where: { payment_id: paymentId },
       data: {
         status,
         updated_at: new Date(),
-      }
-    })
+      },
+    });
 
     return RepositoryMapper.toPaymentDomain(statusUpdate);
   }
 
-  async updateBooking(bookingId: number, booking: Partial<Booking>): Promise<Booking> {
+  async updateBooking(
+    bookingId: number,
+    booking: Partial<Booking>,
+  ): Promise<Booking> {
     const data: any = {};
 
     if (booking.timeRange !== undefined) {
@@ -160,7 +174,7 @@ export class BookingRepository {
     }
 
     if (booking.state !== undefined) {
-      data.state = booking.state; 
+      data.state = booking.state;
     }
 
     if (booking.statusNote !== undefined) {
@@ -168,16 +182,16 @@ export class BookingRepository {
     }
 
     const updatedBooking = await this.prisma.booking.update({
-      where: { booking_id: bookingId},
+      where: { booking_id: bookingId },
       data,
-    })
+    });
 
-    return RepositoryMapper.toDomain(updatedBooking); 
+    return RepositoryMapper.toDomain(updatedBooking);
   }
 
   async deleteBooking(bookingId: number): Promise<void> {
     await this.prisma.booking.delete({
-      where: {booking_id: bookingId},
-    })
+      where: { booking_id: bookingId },
+    });
   }
 }

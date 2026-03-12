@@ -5,7 +5,7 @@ import { RepositoryMapper } from './mapper/repository.mapper';
 
 @Injectable()
 export class SessionRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(session: Session): Promise<Session> {
     const created = await this.prisma.session.create({
@@ -30,14 +30,14 @@ export class SessionRepository {
 
   async findAll(): Promise<Session[]> {
     const list = await this.prisma.session.findMany();
-    return list.map(session => RepositoryMapper.toDomain(session));
+    return list.map((session) => RepositoryMapper.toDomain(session));
   }
 
   async findByPatientId(patientId: number): Promise<Session[]> {
     const list = await this.prisma.session.findMany({
       where: { patient_id: patientId },
     });
-    return list.map(session => RepositoryMapper.toDomain(session));
+    return list.map((session) => RepositoryMapper.toDomain(session));
   }
 
   async update(session: Session): Promise<Session> {

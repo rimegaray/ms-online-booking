@@ -1,6 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/service/prisma.service';
-import { AvailabilityStatus, type Availability } from '../model/availability.model';
+import {
+  AvailabilityStatus,
+  type Availability,
+} from '../model/availability.model';
 import { AvailabilityRepositoryMapper } from './mapper/repository.mapper';
 
 @Injectable()
@@ -12,7 +15,9 @@ export class AvailabilityRepository {
       where: { psychologist_id: psychologistId },
     });
 
-    return availabilityEntities.map(AvailabilityRepositoryMapper.toDomain);
+    return availabilityEntities.map((availability) =>
+      AvailabilityRepositoryMapper.toDomain(availability),
+    );
   }
 
   async findInactiveAndReservedByPsychologistId(
@@ -22,11 +27,13 @@ export class AvailabilityRepository {
       where: {
         psychologist_id: psychologistId,
         is_active: {
-          in:[AvailabilityStatus.INACTIVE, AvailabilityStatus.RESERVED,]
+          in: [AvailabilityStatus.INACTIVE, AvailabilityStatus.RESERVED],
         },
       },
     });
-    return availabilityEntities.map(AvailabilityRepositoryMapper.toDomain);
+    return availabilityEntities.map((availability) =>
+      AvailabilityRepositoryMapper.toDomain(availability),
+    );
   }
 
   async save(availability: Availability): Promise<Availability> {
@@ -46,15 +53,18 @@ export class AvailabilityRepository {
     return AvailabilityRepositoryMapper.toDomain(updatedEntity);
   }
 
-  async findByPsychologistDateAndTime(psychologistId: number, date:Date, timeRange: string): Promise<Availability | null> {
-
+  async findByPsychologistDateAndTime(
+    psychologistId: number,
+    date: Date,
+    timeRange: string,
+  ): Promise<Availability | null> {
     const startOfDay = new Date(date);
-    startOfDay.setUTCHours(0,0,0,0);
+    startOfDay.setUTCHours(0, 0, 0, 0);
 
     const endOfDay = new Date(date);
-    endOfDay.setUTCHours(23,59,59,999);
+    endOfDay.setUTCHours(23, 59, 59, 999);
 
-    const entity  = await this.prisma.availability.findFirst({
+    const entity = await this.prisma.availability.findFirst({
       where: {
         psychologist_id: psychologistId,
         time_range: timeRange,
@@ -62,9 +72,9 @@ export class AvailabilityRepository {
           gte: startOfDay,
           lte: endOfDay,
         },
-      }
+      },
     });
 
-    return entity  ? AvailabilityRepositoryMapper.toDomain(entity ) : null;
+    return entity ? AvailabilityRepositoryMapper.toDomain(entity) : null;
   }
 }

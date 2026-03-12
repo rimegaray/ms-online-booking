@@ -24,7 +24,7 @@ export class PatientController {
   @Get()
   async getPatients(): Promise<PatientResponseDto[]> {
     const patients = await this.patientService.getPatients();
-    return patients.map(PatientMapper.toResponse);
+    return patients.map((patient) => PatientMapper.toResponse(patient));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -41,7 +41,7 @@ export class PatientController {
     @Body() patientRequestDto: PatientRequestDto,
   ): Promise<PatientRequestDto> {
     const model = PatientMapper.toModel(patientRequestDto);
-    
+
     const patient = await this.patientService.createPatient(model);
     return PatientMapper.toResponse(patient);
   }
@@ -69,9 +69,15 @@ export class PatientController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':patientId')
-  async updateSessionDate(@Param('patientId') patientId: string, @Body() request: UpdatePatientRequestDto): Promise<PatientResponseDto> {
+  async updateSessionDate(
+    @Param('patientId') patientId: string,
+    @Body() request: UpdatePatientRequestDto,
+  ): Promise<PatientResponseDto> {
     const model = PatientMapper.toUpdateModel(request);
-    const patient = await this.patientService.patchPatient(Number(patientId),model);
+    const patient = await this.patientService.patchPatient(
+      Number(patientId),
+      model,
+    );
     return PatientMapper.toResponse(patient);
   }
 }

@@ -9,6 +9,6 @@ import { AvailabilityModule } from 'src/availability/availability.module';
 @Module({
   imports: [AvailabilityModule],
   controllers: [BookingController],
-  providers: [BookingService, BookingRepository, PrismaService, JwtAuthGuard]
+  providers: [BookingService, BookingRepository, PrismaService, JwtAuthGuard],
 })
 export class BookingModule {}

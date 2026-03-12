@@ -1,4 +1,7 @@
-import { AvailabilityStatus, type Availability } from '../../model/availability.model';
+import {
+  AvailabilityStatus,
+  type Availability,
+} from '../../model/availability.model';
 
 export class AvailabilityRepositoryMapper {
   static toDomain(availabilityEntity: any): Availability {

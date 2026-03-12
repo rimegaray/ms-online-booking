@@ -24,9 +24,9 @@ export class ServiceRepository {
 
   async findAll(where?: Prisma.serviceWhereInput): Promise<Service[]> {
     const lists = await this.prismaService.service.findMany({
-        where
+      where,
     });
-    
+
     return lists.map((services) => RepositoryMapper.toDomain(services));
   }
 

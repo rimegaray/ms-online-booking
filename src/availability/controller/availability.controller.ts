@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
 import { AvailabilityRequestDto } from './dto/availability-request.dto';
 import type { AvailabilityResponseDto } from './dto/availability-response.dto';
 import { AvailabilityService } from '../service/availability.service';
@@ -35,6 +27,8 @@ export class AvailabilityController {
       await this.availabilityService.findInactiveAndReservedByPsychologistId(
         Number(psychologistId),
       );
-    return availabilities.map(AvailabilityMapper.toResponseDto);
+    return availabilities.map((availability) =>
+      AvailabilityMapper.toResponseDto(availability),
+    );
   }
 }

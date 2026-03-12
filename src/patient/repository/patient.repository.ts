@@ -8,10 +8,12 @@ import { Prisma } from '@prisma/client';
 export class PatientRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(patient: Patient, tx?: Prisma.TransactionClient): Promise<Patient> {
-    
+  async create(
+    patient: Patient,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Patient> {
     const prismaClient = tx ?? this.prisma;
-    
+
     const created = await prismaClient.patient.create({
       data: {
         name: patient.name,

@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Booking } from 'src/booking/model/booking.model';
+import {
+  Booking,
+  PatientInfo,
+  Payment,
+  PsychologistInfo,
+  ServiceInfo,
+} from 'src/booking/model/booking.model';
 import { BookingRequestDto } from '../dto/booking-request.dto';
 import {
   BookingResponseDto,
@@ -45,12 +51,11 @@ export class BookingMapper {
         : undefined,
       payment: booking.payment
         ? this.toPaymentInfoDto(booking.payment)
-        :undefined,
+        : undefined,
     };
   }
 
-  static toPatientInfoDto(patient: Booking['patient']): PatientInfoDto {
-    if (!patient) return undefined as any;
+  static toPatientInfoDto(patient: PatientInfo): PatientInfoDto {
     return {
       patientId: patient.patientId,
       name: patient.name,
@@ -61,9 +66,8 @@ export class BookingMapper {
   }
 
   static toPsychologistInfoDto(
-    psychologist: Booking['psychologist'],
+    psychologist: PsychologistInfo,
   ): PsychologistInfoDto {
-    if (!psychologist) return undefined as any;
     return {
       psychologistId: psychologist.psychologistId,
       name: psychologist.name,
@@ -72,8 +76,7 @@ export class BookingMapper {
     };
   }
 
-  static toServiceInfoDto(service: Booking['service']): ServiceInfoDto {
-    if (!service) return undefined as any;
+  static toServiceInfoDto(service: ServiceInfo): ServiceInfoDto {
     return {
       serviceId: service.serviceId,
       name: service.name,
@@ -82,13 +85,12 @@ export class BookingMapper {
     };
   }
 
-  static toPaymentInfoDto(payment: Booking['payment']): PaymentInfoDto {
-    if(!payment) return undefined as any;
+  static toPaymentInfoDto(payment: Payment): PaymentInfoDto {
     return {
       transactionId: payment.transactionId,
       amount: payment.amount,
       paymentUuid: payment.paymentUuid,
-      createdAt: payment.createdAt
+      createdAt: payment.createdAt,
     };
   }
 
@@ -99,6 +101,6 @@ export class BookingMapper {
       bookingDate: dto.bookingDate,
       state: dto.state,
       statusNote: dto.statusNote,
-    }
+    };
   }
 }

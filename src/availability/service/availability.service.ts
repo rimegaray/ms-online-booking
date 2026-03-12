@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Availability, AvailabilityStatus } from '../model/availability.model';
 import { AvailabilityRepository } from '../repository/availability.repository';
 
@@ -58,9 +58,18 @@ export class AvailabilityService {
       psychologistId,
     );
   }
-  
-  async getAvailabilityStatus(psychologistId: number,date: Date,timeRange: string): Promise<AvailabilityStatus | undefined> {
-    const availability = await this.availabilityRepository.findByPsychologistDateAndTime(psychologistId,date,timeRange);
+
+  async getAvailabilityStatus(
+    psychologistId: number,
+    date: Date,
+    timeRange: string,
+  ): Promise<AvailabilityStatus | undefined> {
+    const availability =
+      await this.availabilityRepository.findByPsychologistDateAndTime(
+        psychologistId,
+        date,
+        timeRange,
+      );
 
     return availability ? availability.isActive : AvailabilityStatus.ACTIVE;
   }

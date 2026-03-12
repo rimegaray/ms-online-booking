@@ -2,7 +2,10 @@ import { User, UserProfile } from 'src/user/model/user.model';
 import { UserRequestDto } from '../dto/user-request.dto';
 import { UserResponseDto } from '../dto/user-response.dto';
 import { PatchUserDto } from '../dto/user-patch.dto';
-import { RegisterPatientRequestDto, RegisterPatientResponseDto } from '../dto/register-patient.dto';
+import {
+  RegisterPatientRequestDto,
+  RegisterPatientResponseDto,
+} from '../dto/register-patient.dto';
 import { Patient } from 'src/patient/model/patient.model';
 
 export class UserMapper {
@@ -44,8 +47,8 @@ export class UserMapper {
       age: patientRequestDto.age,
       dni: patientRequestDto.dni,
       phoneNumber: patientRequestDto.phoneNumber,
-      tutorName: patientRequestDto.tutorName
-    }
+      tutorName: patientRequestDto.tutorName,
+    };
   }
 
   static toUserModel(dto: RegisterPatientRequestDto): User {
@@ -55,7 +58,7 @@ export class UserMapper {
       password: dto.password.trim(),
       profile: UserProfile.PATIENT,
       email: dto.email,
-      entityId: 0
+      entityId: 0,
     };
   }
 
@@ -71,11 +74,10 @@ export class UserMapper {
       dni: result.patient.dni,
       phoneNumber: result.patient.phoneNumber,
       tutorName: result.patient.tutorName,
-
       userId: result.user.userId,
       username: result.user.username,
       password: result.user.password,
-      profile: result.user.profile, 
+      profile: result.user.profile,
       email: result.user.email,
       entityId: result.user.entityId,
       isActive: result.user.isActive,

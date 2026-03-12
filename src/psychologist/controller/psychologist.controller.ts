@@ -25,8 +25,12 @@ export class PsychologistController {
 
   @Roles(Role.SECRETARY, Role.PSYCHOLOGIST, Role.PATIENT)
   @Get()
-  getPsychologists(@CurrentUser() user, @Query('serviceId', new ParseIntPipe({ optional: true })) serviceId?: number): Promise<PsychologistResponseDto[]> {
-    return this.psychologistService.getPsychologists(user ,serviceId);
+  getPsychologists(
+    @CurrentUser() user,
+    @Query('serviceId', new ParseIntPipe({ optional: true }))
+    serviceId?: number,
+  ): Promise<PsychologistResponseDto[]> {
+    return this.psychologistService.getPsychologists(user, serviceId);
   }
 
   @Get(':psychologistId')

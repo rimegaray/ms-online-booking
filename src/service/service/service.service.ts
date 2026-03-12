@@ -14,31 +14,23 @@ export class ServiceService {
   }
 
   findService(user: AuthUser): Promise<Service[]> {
-    
     const where = this.buildFilterByRole(user);
-    
     return this.serviceRepository.findAll(where);
   }
 
-  private buildFilterByRole(
-    user: AuthUser,
-  ): Prisma.serviceWhereInput {
+  private buildFilterByRole(user: AuthUser): Prisma.serviceWhereInput {
     const where: Prisma.serviceWhereInput = {};
     switch (user.role) {
       case Role.PATIENT:
-        where.is_active= true;
+        where.is_active = true;
         break;
-
       case Role.PSYCHOLOGIST:
         break;
-      
-      case Role.SECRETARY: 
+      case Role.SECRETARY:
         break;
-
       default:
         throw new ForbiddenException();
     }
-
     return where;
   }
 

@@ -25,7 +25,7 @@ export class RepositoryMapper {
             transactionId: prismaBooking.payment.transaction_id,
             status: prismaBooking.payment.status ?? undefined,
             createdAt: prismaBooking.payment.created_at ?? undefined,
-            updatedAt: prismaBooking.payment.updated_at ?? undefined
+            updatedAt: prismaBooking.payment.updated_at ?? undefined,
           }
         : undefined,
       patient: prismaBooking.patient

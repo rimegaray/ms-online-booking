@@ -14,7 +14,7 @@ export class UserRepository {
       where: { username: username },
     });
 
-    if(!found) return null;
+    if (!found) return;
 
     return RepositoryMapper.toDomain(found);
   }
@@ -32,7 +32,6 @@ export class UserRepository {
   }
 
   async create(user: User, tx?: Prisma.TransactionClient): Promise<User> {
-
     const prismaClient = tx ?? this.prisma;
     const passwordEncryp = await bcrypt.hash(user.password, 12);
     const created = await prismaClient.user.create({
@@ -73,13 +72,13 @@ export class UserRepository {
 
   async patch(userId: number, user: Partial<User>): Promise<User> {
     const data: Partial<User> = {};
-     if(user.email !== undefined) data.email = user.email;
+    if (user.email !== undefined) data.email = user.email;
 
-     const updated = await this.prisma.user.update({
+    const updated = await this.prisma.user.update({
       where: { user_id: userId },
       data,
-     });
+    });
 
-     return RepositoryMapper.toDomain(updated);
+    return RepositoryMapper.toDomain(updated);
   }
 }

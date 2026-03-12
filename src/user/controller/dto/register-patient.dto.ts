@@ -1,7 +1,18 @@
-import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, Length, Matches, Max, MaxLength, Min, MinLength } from "class-validator";
+import {
+  IsEmail,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+  Matches,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class RegisterPatientRequestDto {
-
   @IsString({ message: 'El nombre debe ser un texto' })
   @IsNotEmpty({ message: 'El nombre no puede estar vacío' })
   @Length(0, 255, { message: 'El nombre debe tener entre 1 y 255 caracteres' })
@@ -12,7 +23,9 @@ export class RegisterPatientRequestDto {
 
   @IsString({ message: 'El apellido debe ser un texto' })
   @IsNotEmpty({ message: 'El apellido no puede estar vacío' })
-  @Length(0, 255, { message: 'El apellido debe tener entre 1 y 255 caracteres' })
+  @Length(0, 255, {
+    message: 'El apellido debe tener entre 1 y 255 caracteres',
+  })
   @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
     message: 'lastname: solo puede contener letras y espacios',
   })
@@ -37,7 +50,7 @@ export class RegisterPatientRequestDto {
   @IsOptional()
   @IsString({ message: 'El nombre del tutor debe ser un texto' })
   @Length(0, 255, {
-      message: 'El nombre del tutor debe tener entre 1 y 255 caracteres',
+    message: 'El nombre del tutor debe tener entre 1 y 255 caracteres',
   })
   tutorName?: string;
 
@@ -52,9 +65,12 @@ export class RegisterPatientRequestDto {
   password!: string;
 
   @IsOptional()
-  @IsEmail({}, { 
-    message: 'El email $value no es válido' 
-  })
+  @IsEmail(
+    {},
+    {
+      message: 'El email $value no es válido',
+    },
+  )
   email!: string;
 }
 
@@ -66,7 +82,7 @@ export class RegisterPatientResponseDto {
   dni!: string;
   phoneNumber!: string;
   tutorName?: string;
-  
+
   userId!: number;
   username!: string;
   password!: string;

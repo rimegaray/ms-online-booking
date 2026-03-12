@@ -6,7 +6,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ServiceService } from '../service/service.service';
@@ -33,9 +32,7 @@ export class ServiceController {
 
   @Roles(Role.PATIENT, Role.PSYCHOLOGIST, Role.SECRETARY)
   @Get()
-  getAll(
-    @CurrentUser() user,
-  ): Promise<ServiceResponseDto[]> {
+  getAll(@CurrentUser() user): Promise<ServiceResponseDto[]> {
     return this.serviceService.findService(user);
   }
 

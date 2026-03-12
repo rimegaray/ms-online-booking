@@ -44,6 +44,6 @@ export class PatientMapper {
   static toUpdateModel(dto: UpdatePatientRequestDto): Partial<Patient> {
     return {
       lastSessionDate: dto.lastSessionDate,
-    }
+    };
   }
 }

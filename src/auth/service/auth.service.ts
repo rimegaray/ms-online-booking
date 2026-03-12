@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthRepository } from '../repository/auth.repository';
 import { Auth } from '../model/auth.model';
 import { JwtService } from '@nestjs/jwt';
@@ -90,7 +94,11 @@ export class AuthService {
   private async processRefreshToken(user: User, res: Response) {
     const refreshToken = randomUUID();
 
-    await this.authRepository.upsertRefreshToken(user.userId, refreshToken, user.entityId);
+    await this.authRepository.upsertRefreshToken(
+      user.userId,
+      refreshToken,
+      user.entityId,
+    );
 
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,

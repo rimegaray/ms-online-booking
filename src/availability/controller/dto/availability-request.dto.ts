@@ -15,7 +15,9 @@ export class AvailabilityRequestDto {
   @IsDateString({}, { message: 'La fecha debe tener formato YYYY-MM-DD' })
   date?: string;
 
-  @MaxLength(20, { message: 'El rango de tiempo no puede tener más de 20 caracteres' })
+  @MaxLength(20, {
+    message: 'El rango de tiempo no puede tener más de 20 caracteres',
+  })
   timeRange!: string;
 
   @IsOptional()

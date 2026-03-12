@@ -38,16 +38,16 @@ export class PsychologistRepository {
   async findAll(where: Prisma.psychologistWhereInput): Promise<Psychologist[]> {
     const users = await this.prisma.user.findMany({
       where: { profile: UserProfile.PSYCHOLOGIST },
-      select: { entity_id: true }
+      select: { entity_id: true },
     });
 
-    const psychologistIds = users.map(u => u.entity_id);
+    const psychologistIds = users.map((u) => u.entity_id);
 
     const list = await this.prisma.psychologist.findMany({
       where: {
         ...where,
-        psychologist_id: {in: psychologistIds}
-      }
+        psychologist_id: { in: psychologistIds },
+      },
     });
     return list.map((psychologist) => RepositoryMapper.toDomain(psychologist));
   }

@@ -20,7 +20,9 @@ export class PatientRequestDto {
 
   @IsString({ message: 'El apellido debe ser un texto' })
   @IsNotEmpty({ message: 'El apellido no puede estar vacío' })
-  @Length(0, 255, { message: 'El apellido debe tener entre 1 y 255 caracteres' })
+  @Length(0, 255, {
+    message: 'El apellido debe tener entre 1 y 255 caracteres',
+  })
   @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
     message: 'lastname: solo puede contener letras y espacios',
   })

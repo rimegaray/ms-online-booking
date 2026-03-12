@@ -44,7 +44,7 @@ export class BookingService {
     return this.bookingRepository.findAll(
       filters.patientId,
       filters.psychologistId,
-      bookingDate
+      bookingDate,
     );
   }
 
@@ -82,7 +82,6 @@ export class BookingService {
     amount: number,
     transactionId: string,
   ): Promise<Booking> {
-
     const booking = await this.bookingRepository.findById(bookingId);
 
     if (!booking) {
@@ -96,7 +95,7 @@ export class BookingService {
     );
 
     if (status !== AvailabilityStatus.ACTIVE) {
-      throw new BadRequestException('Hora ya reservada')
+      throw new BadRequestException('Hora ya reservada');
     }
 
     const availabilityRequest = {
@@ -104,8 +103,8 @@ export class BookingService {
       date: booking.bookingDate,
       timeRange: booking.timeRange,
       isActive: AvailabilityStatus.RESERVED,
-    }
-    
+    };
+
     const paymentUuid = `PAY-${randomUUID()}`;
 
     const payment: Payment = {
@@ -164,7 +163,7 @@ export class BookingService {
       date: booking.bookingDate,
       timeRange: booking.timeRange,
       isActive: AvailabilityStatus.ACTIVE,
-    }
+    };
 
     if (!booking.paymentId) {
       throw new BadRequestException('El booking no tiene un payment asociado.');
@@ -174,12 +173,16 @@ export class BookingService {
       booking.paymentId,
       PaymentStatus.REJECTED,
     );
-    await this.availabilityService.upsertByDate(availabilityRequest)
+    await this.availabilityService.upsertByDate(availabilityRequest);
 
     return booking;
   }
 
-  async updateBooking(bookingId: number, booking: Partial<Booking>, user: AuthUser): Promise<Booking> {
+  async updateBooking(
+    bookingId: number,
+    booking: Partial<Booking>,
+    user: AuthUser,
+  ): Promise<Booking> {
     const getBooking = await this.bookingRepository.findById(bookingId);
 
     if (!getBooking) {
@@ -187,10 +190,10 @@ export class BookingService {
     }
 
     const data: Partial<Booking> = {};
-    const newDate= booking.bookingDate ?? getBooking.bookingDate;
+    const newDate = booking.bookingDate ?? getBooking.bookingDate;
     const newTimeRange = booking.timeRange ?? getBooking.timeRange;
 
-    if(user.role === Role.SECRETARY){
+    if (user.role === Role.SECRETARY) {
       data.timeRange = booking.timeRange;
       data.state = booking.state;
       data.statusNote = booking.statusNote;
@@ -203,20 +206,23 @@ export class BookingService {
       );
 
       if (status !== AvailabilityStatus.ACTIVE) {
-        throw new BadRequestException('Hora ya reservada')
+        throw new BadRequestException('Hora ya reservada');
       }
 
-      if(booking.state === BookingState.PROCESSING || booking.state === BookingState.CONFIRMED) {
-        await this.availabilityService.upsertByDate( {
+      if (
+        booking.state === BookingState.PROCESSING ||
+        booking.state === BookingState.CONFIRMED
+      ) {
+        await this.availabilityService.upsertByDate({
           psychologistId: getBooking.psychologistId,
           date: newDate,
           timeRange: newTimeRange,
-          isActive: AvailabilityStatus.RESERVED
+          isActive: AvailabilityStatus.RESERVED,
         });
       }
     }
 
-    if(user.role === Role.PATIENT){
+    if (user.role === Role.PATIENT) {
       data.timeRange = booking.timeRange;
       data.bookingDate = booking.bookingDate;
       data.notes = booking.notes;
@@ -230,8 +236,10 @@ export class BookingService {
     if (!getBooking) {
       throw new NotFoundException('Reserva no encontrada');
     }
-    if(getBooking.state !== BookingState.PENDING_PAYMENT){
-      throw new ConflictException('Solo se pueden eliminar reservas en estado PENDING_PAYMENT');
+    if (getBooking.state !== BookingState.PENDING_PAYMENT) {
+      throw new ConflictException(
+        'Solo se pueden eliminar reservas en estado PENDING_PAYMENT',
+      );
     }
     await this.bookingRepository.deleteBooking(bookingId);
   }

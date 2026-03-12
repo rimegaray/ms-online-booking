@@ -18,7 +18,9 @@ export class PsychologistRequestDto {
 
   @IsString({ message: 'El apellido debe ser texto' })
   @IsNotEmpty({ message: 'El apellido es obligatorio' })
-  @Length(2, 255, { message: 'El apellido debe tener entre 2 y 255 caracteres' })
+  @Length(2, 255, {
+    message: 'El apellido debe tener entre 2 y 255 caracteres',
+  })
   lastname!: string;
 
   @IsInt({ message: 'La edad debe ser un número entero' })
@@ -30,7 +32,9 @@ export class PsychologistRequestDto {
   @IsOptional()
   specialty?: string;
 
-  @Matches(/^9\d{8}$/, {message: 'El número de teléfono debe tener 9 digitos y empezar en 9'})
+  @Matches(/^9\d{8}$/, {
+    message: 'El número de teléfono debe tener 9 digitos y empezar en 9',
+  })
   phoneNumber!: string;
 
   @IsOptional()
