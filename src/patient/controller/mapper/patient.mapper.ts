@@ -1,29 +1,30 @@
+import { Injectable } from '@nestjs/common';
 import { Patient } from 'src/patient/model/patient.model';
-import { PatientRequestDto } from '../dto/patient-request.dto';
+import { CreatePatientRequestDto } from '../dto/patient-request.dto';
 import { PatientResponseDto } from '../dto/patient-response.dto';
 import { UpdatePatientRequestDto } from '../dto/update-patient-request.dto';
 
+@Injectable()
 export class PatientMapper {
-  static toModel(patientRequestDto: PatientRequestDto): Patient {
+  toModel(patientRequestDto: CreatePatientRequestDto): Patient {
     return {
       patientId: 0,
-      name: patientRequestDto.name.trim(),
-      lastname: patientRequestDto.lastname.trim(),
+      name: patientRequestDto.name,
+      lastname: patientRequestDto.lastname,
       age: patientRequestDto.age,
       dni: patientRequestDto.dni,
       phoneNumber: patientRequestDto.phoneNumber,
-      tutorName: patientRequestDto.tutorName,
-      observations: patientRequestDto.observations?.trim() ?? '',
-      lastSessionDate: patientRequestDto.lastSessionDate,
-      signedConsent: patientRequestDto.signedConsent
-        ? Uint8Array.from(
-            Buffer.from(patientRequestDto.signedConsent, 'base64'),
-          )
+      tutorName: patientRequestDto.tutorName ?? null,
+      observations: patientRequestDto.observations ?? null,
+      lastSessionDate: patientRequestDto.lastSessionDate
+        ? new Date(patientRequestDto.lastSessionDate)
         : null,
+      signedConsent: null,
+      admissionDate: null,
     };
   }
 
-  static toResponse(model: Patient): PatientResponseDto {
+  toResponse(model: Patient): PatientResponseDto {
     return {
       patientId: model.patientId,
       name: model.name,
@@ -35,15 +36,14 @@ export class PatientMapper {
       admissionDate: model.admissionDate,
       observations: model.observations,
       lastSessionDate: model.lastSessionDate,
-      signedConsent: model.signedConsent
-        ? Buffer.from(model.signedConsent).toString('base64')
-        : null,
     };
   }
 
-  static toUpdateModel(dto: UpdatePatientRequestDto): Partial<Patient> {
+  toUpdateModel(dto: UpdatePatientRequestDto): Partial<Patient> {
     return {
-      lastSessionDate: dto.lastSessionDate,
+      lastSessionDate: dto.lastSessionDate
+        ? new Date(dto.lastSessionDate)
+        : undefined,
     };
   }
 }

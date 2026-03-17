@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Patient } from 'src/patient/model/patient.model';
+import { patient } from '@prisma/client';
 
 @Injectable()
 export class RepositoryMapper {
-  static toDomain(prismaPatient: any): Patient {
+  
+  toDomain(prismaPatient: patient): Patient {
     return {
       patientId: prismaPatient.patient_id,
       name: prismaPatient.name,
@@ -15,7 +17,9 @@ export class RepositoryMapper {
       admissionDate: prismaPatient.admission_date,
       observations: prismaPatient.observations,
       lastSessionDate: prismaPatient.last_session_date,
-      signedConsent: prismaPatient.signed_consent,
+      signedConsent: prismaPatient.signed_consent
+        ? new Uint8Array(prismaPatient.signed_consent)
+        : null,
     };
   }
 }

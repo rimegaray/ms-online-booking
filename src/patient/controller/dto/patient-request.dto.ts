@@ -7,30 +7,35 @@ import {
   Matches,
   Max,
   Min,
+  IsDateString,
 } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
-export class PatientRequestDto {
+export class CreatePatientRequestDto {
   @IsString({ message: 'El nombre debe ser un texto' })
   @IsNotEmpty({ message: 'El nombre no puede estar vacío' })
-  @Length(0, 255, { message: 'El nombre debe tener entre 1 y 255 caracteres' })
-  @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
-    message: 'name: solo puede contener letras y espacios',
+  @Length(1, 255, { message: 'El nombre debe tener entre 1 y 255 caracteres' })
+  @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/, {
+    message: 'El nombre solo puede contener letras y espacios',
   })
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   name!: string;
 
   @IsString({ message: 'El apellido debe ser un texto' })
   @IsNotEmpty({ message: 'El apellido no puede estar vacío' })
-  @Length(0, 255, {
+  @Length(1, 255, {
     message: 'El apellido debe tener entre 1 y 255 caracteres',
   })
-  @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/, {
-    message: 'lastname: solo puede contener letras y espacios',
+  @Matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/, {
+    message: 'El apellido solo puede contener letras y espacios',
   })
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   lastname!: string;
 
   @IsInt({ message: 'La edad debe ser un número entero' })
   @Min(1, { message: 'La edad mínima es 1 año' })
   @Max(99, { message: 'La edad máxima es 99 años' })
+  @Type(() => Number)
   age!: number;
 
   @IsString({ message: 'El DNI debe ser un texto' })
@@ -46,22 +51,24 @@ export class PatientRequestDto {
 
   @IsOptional()
   @IsString({ message: 'El nombre del tutor debe ser un texto' })
-  @Length(0, 255, {
+  @Length(1, 255, {
     message: 'El nombre del tutor debe tener entre 1 y 255 caracteres',
   })
-  tutorName?: string;
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  tutorName?: string | null;
 
   @IsOptional()
   @IsString({ message: 'Las observaciones deben ser un texto' })
   @Length(0, 500, {
     message: 'Las observaciones no pueden superar los 500 caracteres',
   })
-  observations?: string;
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  observations?: string | null;
 
   @IsOptional()
-  lastSessionDate?: Date;
-
-  @IsOptional()
-  @IsString({ message: 'El consentimiento firmado debe ser un texto' })
-  signedConsent?: string | null;
+  @IsDateString(
+    {},
+    { message: 'La fecha de última sesión debe ser una fecha válida' },
+  )
+  lastSessionDate?: string | null;
 }
