@@ -2,12 +2,11 @@ export class PatientResponseDto {
   patientId!: number;
   name!: string;
   lastname!: string;
-  age!: number;
-  dni!: string;
-  phoneNumber!: string;
-  tutorName?: string;
-  admissionDate?: Date;
-  observations?: string;
-  lastSessionDate?: Date;
-  signedConsent!: string | null;
+  age!: number | null;
+  dni!: string | null;
+  phoneNumber!: string | null;
+  tutorName?: string | null;
+  admissionDate?: Date | null;
+  observations?: string | null;
+  lastSessionDate?: Date | null;
 }
