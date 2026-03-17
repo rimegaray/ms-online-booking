@@ -9,12 +9,15 @@ import { Type } from 'class-transformer';
 
 export class BookingRequestDto {
   @IsInt({ message: 'El patientId debe ser un número entero' })
+  @IsNotEmpty({ message: 'El patientId no puede ser nulo' })
   patientId!: number;
 
   @IsInt({ message: 'El psychologistId debe ser un número entero' })
+  @IsNotEmpty({ message: 'El psychologistId no puede ser nulo' })
   psychologistId!: number;
 
   @IsInt({ message: 'El serviceId debe ser un número entero' })
+  @IsNotEmpty({ message: 'El serviceId no puede ser nulo' })
   serviceId!: number;
 
   @IsOptional()

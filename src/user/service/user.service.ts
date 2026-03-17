@@ -42,7 +42,7 @@ export class UserService {
 
   async createUser(user: User): Promise<User> {
     try {
-      return this.userRepository.create(user);
+      return await this.userRepository.create(user);
     } catch (error) {
       if (error?.code === 'P2002') {
         throw new ConflictException('El usuario ya existe');
@@ -94,7 +94,7 @@ export class UserService {
     tx?: Prisma.TransactionClient,
   ): Promise<User> {
     try {
-      return this.userRepository.create(
+      return await this.userRepository.create(
         {
           ...user,
           entityId: patientId,
