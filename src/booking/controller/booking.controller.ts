@@ -20,6 +20,7 @@ import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { CurrentUser } from 'src/auth/roles/user.decorator';
 import { UpdateBookingDto } from './dto/update-booking-request.dto';
 import { ProcessingRequestDto } from './dto/processing-request.dto';
+import { BookingState } from '../model/booking.model';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('/booking')
@@ -42,12 +43,14 @@ export class BookingController {
     @Query('patientId') patientId?: string,
     @Query('psychologistId') psychologistId?: string,
     @Query('bookingDate') bookingDate?: string,
+    @Query('state') state?: BookingState,
   ): Promise<BookingResponseDto[]> {
     const bookings = await this.bookingService.getBookings(
       user,
       patientId ? Number(patientId) : undefined,
       psychologistId ? Number(psychologistId) : undefined,
       bookingDate,
+      state
     );
     return bookings.map((booking) => BookingMapper.toResponse(booking));
   }

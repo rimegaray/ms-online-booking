@@ -38,6 +38,7 @@ export class BookingService {
     patientId?: number,
     psychologistId?: number,
     bookingDate?: string,
+    state?: BookingState,
   ): Promise<Booking[]> {
     const filters = this.buildFiltersByRole(user, patientId, psychologistId);
 
@@ -45,6 +46,7 @@ export class BookingService {
       filters.patientId,
       filters.psychologistId,
       bookingDate,
+      state,
     );
   }
 

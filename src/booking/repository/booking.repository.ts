@@ -52,6 +52,7 @@ export class BookingRepository {
     patientId?: number,
     psychologistId?: number,
     bookingDate?: string,
+    state?: BookingState,
   ): Promise<Booking[]> {
     const where: any = {};
 
@@ -63,7 +64,9 @@ export class BookingRepository {
       where.psychologist_id = psychologistId;
     }
 
-    if (bookingDate) {
+    if (state) {
+      where.state = state;
+    } else if (bookingDate) {
       const start = new Date(`${bookingDate}T00:00:00.000Z`);
       const end = new Date(`${bookingDate}T23:59:59.999Z`);
 
