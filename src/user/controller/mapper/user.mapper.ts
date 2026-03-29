@@ -45,9 +45,13 @@ export class UserMapper {
       name: patientRequestDto.name.trim(),
       lastname: patientRequestDto.lastname.trim(),
       age: patientRequestDto.age,
-      dni: patientRequestDto.dni,
-      phoneNumber: patientRequestDto.phoneNumber,
-      tutorName: patientRequestDto.tutorName,
+      dni: patientRequestDto.dni ?? null,
+      phoneNumber: patientRequestDto.phoneNumber ?? null,
+      tutorName: patientRequestDto.tutorName ?? null,
+      observations: null,
+      lastSessionDate: null,
+      signedConsent: null,
+      admissionDate: null,
     };
   }
 
@@ -59,6 +63,7 @@ export class UserMapper {
       profile: UserProfile.PATIENT,
       email: dto.email,
       entityId: 0,
+      isActive: true,
     };
   }
 
@@ -70,15 +75,15 @@ export class UserMapper {
       patientId: result.patient.patientId,
       name: result.patient.name,
       lastname: result.patient.lastname,
-      age: result.patient.patientId,
-      dni: result.patient.dni,
-      phoneNumber: result.patient.phoneNumber,
-      tutorName: result.patient.tutorName,
+      age: result.patient.age ?? 0,
+      dni: result.patient.dni ?? '',
+      phoneNumber: result.patient.phoneNumber ?? '',
+      tutorName: result.patient.tutorName ?? undefined,
       userId: result.user.userId,
       username: result.user.username,
       password: result.user.password,
       profile: result.user.profile,
-      email: result.user.email,
+      email: result.user.email ?? '',
       entityId: result.user.entityId,
       isActive: result.user.isActive,
     };

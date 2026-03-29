@@ -8,76 +8,81 @@ import {
   Post,
   Put,
   UseGuards,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { PatientService } from '../service/patient.service';
 import { PatientResponseDto } from './dto/patient-response.dto';
 import { PatientMapper } from './mapper/patient.mapper';
-import { PatientRequestDto } from './dto/patient-request.dto';
+import { CreatePatientRequestDto } from './dto/patient-request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { UpdatePatientRequestDto } from './dto/update-patient-request.dto';
 
 @Controller('/patient')
 export class PatientController {
-  constructor(private readonly patientService: PatientService) {}
+  constructor(
+    private readonly patientService: PatientService,
+    private readonly patientMapper: PatientMapper,
+  ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getPatients(): Promise<PatientResponseDto[]> {
     const patients = await this.patientService.getPatients();
-    return patients.map((patient) => PatientMapper.toResponse(patient));
+    return patients.map((patient) => this.patientMapper.toResponse(patient));
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':patientId')
+  @UseGuards(JwtAuthGuard)
   async getPatientById(
-    @Param('patientId') patientId: string,
+    @Param('patientId', ParseIntPipe) patientId: number,
   ): Promise<PatientResponseDto> {
-    const patient = await this.patientService.getPatientById(Number(patientId));
-    return PatientMapper.toResponse(patient);
+    const patient = await this.patientService.getPatientByIdOrFail(patientId);
+    return this.patientMapper.toResponse(patient);
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async createPatient(
-    @Body() patientRequestDto: PatientRequestDto,
-  ): Promise<PatientRequestDto> {
-    const model = PatientMapper.toModel(patientRequestDto);
-
-    const patient = await this.patientService.createPatient(model);
-    return PatientMapper.toResponse(patient);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Put(':patientId')
-  async updatePatient(
-    @Param('patientId') patientId: string,
-    @Body() patientRequestDto: PatientRequestDto,
+    @Body() patientRequestDto: CreatePatientRequestDto,
   ): Promise<PatientResponseDto> {
-    let model = PatientMapper.toModel(patientRequestDto);
-    model = {
+    const model = this.patientMapper.toModel(patientRequestDto);
+    const patient = await this.patientService.createPatient(model);
+    return this.patientMapper.toResponse(patient);
+  }
+
+  @Put(':patientId')
+  @UseGuards(JwtAuthGuard)
+  async updatePatient(
+    @Param('patientId', ParseIntPipe) patientId: number,
+    @Body() patientRequestDto: CreatePatientRequestDto,
+  ): Promise<PatientResponseDto> {
+    const model = this.patientMapper.toModel(patientRequestDto);
+    const patient = await this.patientService.updatePatient({
       ...model,
-      patientId: Number(patientId),
-    };
-    const patient = await this.patientService.updatePatient(model);
-    return PatientMapper.toResponse(patient);
+      patientId,
+    });
+    return this.patientMapper.toResponse(patient);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':patientId')
-  deletePatient(@Param('patientId') patientId: string): Promise<void> {
-    return this.patientService.deletePatient(Number(patientId));
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deletePatient(
+    @Param('patientId', ParseIntPipe) patientId: number,
+  ): Promise<void> {
+    await this.patientService.deletePatient(patientId);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':patientId')
+  @UseGuards(JwtAuthGuard)
   async updateSessionDate(
-    @Param('patientId') patientId: string,
+    @Param('patientId', ParseIntPipe) patientId: number,
     @Body() request: UpdatePatientRequestDto,
   ): Promise<PatientResponseDto> {
-    const model = PatientMapper.toUpdateModel(request);
-    const patient = await this.patientService.patchPatient(
-      Number(patientId),
-      model,
-    );
-    return PatientMapper.toResponse(patient);
+    const model = this.patientMapper.toUpdateModel(request);
+    const patient = await this.patientService.patchPatient(patientId, model);
+    return this.patientMapper.toResponse(patient);
   }
 }

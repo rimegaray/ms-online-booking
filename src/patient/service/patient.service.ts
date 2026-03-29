@@ -11,8 +11,8 @@ export class PatientService {
     return this.patientRepository.findAll();
   }
 
-  getPatientById(patientId: number): Promise<Patient> {
-    return this.patientRepository.findById(patientId);
+  getPatientByIdOrFail(patientId: number): Promise<Patient> {
+    return this.patientRepository.findByIdOrFail(patientId);
   }
 
   createPatient(
